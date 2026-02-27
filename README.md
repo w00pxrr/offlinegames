@@ -12,7 +12,7 @@ This repository contains a collection of offline games that can be played when y
 2. Download the entire repository as a zip file.
 3. Extract the contents of the zip file.
 4. Copy all the extracted content and paste it into a new folder.
-5. Open the file named `Gams.html` located in the new folder.
+5. Open the file named `Games.html` located in the new folder.
 6. This will give you access to a wide range of games, including Flash games.
 
 ### Credits
