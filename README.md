@@ -49,6 +49,7 @@ The JavaScript files in this repository contain the game data encoded as data UR
 By using this technique, the repository includes various games, including those built with Flash. The Flash games utilize the Ruffle Flash Player emulator, allowing them to be played offline without requiring an internet connection.
 
 I that this approach provides an enjoyable offline gaming experience for coders and gamers alike.
+###### helped by alec ponce and jacob kern
 ###### Forked by w00pxr
 ###### Repository created by mountain658 this README, with the assistance of ChatGPT.
-###### Please check out my profile: [mountain658](https://github.com/mountain658) and [Mountain Game Games](https://github.com/mountain658/mountain658.github.io) at https://mountain658.github.io
+###### Please check out mountain658's profile: [mountain658](https://github.com/mountain658) and [Mountain Game Games](https://github.com/mountain658/mountain658.github.io) at https://mountain658.github.io
