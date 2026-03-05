@@ -16,7 +16,7 @@ This repository contains a collection of offline games that can be played when y
 6. This will give you access to a wide range of games, including Flash games.
 
 ### Credits
-
+sources are archive.org and flashpoint archive, and vimms lair
 - The offline Flash games utilize the [Ruffle Flash Player](https://ruffle.rs) emulator.
 - The clean and stylish user interface of the site is made possible by the [new.css](https://github.com/xz/new.css-site/tree/master) classless css library.
 
