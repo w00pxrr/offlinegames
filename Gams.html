@@ -31,6 +31,13 @@
   <meta name="language" content="English">
   <meta name="revisit-after" content="5 days days">
   <meta name="author" content="Parker Solomon">
+<script>window.addEventListener('online', () => {
+    alert("You are online; you should turn off wifi or change tab name in settings to not get caught; to play more games go onto the github repo and download some of the swfs to play in ruffle");
+});
+
+window.addEventListener('offline', () => {
+    alert('Go to the g/flash folder to find more games');
+});   </script>
 <style>
 html, body {
 transition: .5s;
@@ -223,7 +230,8 @@ transform: translateX(-50%) translateY(-50%);
 
 
 <div id="contain">
-<h3><b>if you want more flash games click ruffle and open the g folder. i also added some roms for webretro for nes and n64</b></h3>
+
+
 <a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
 <a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
 
@@ -490,12 +498,16 @@ var gamsList = [
 {name: "Duck Life 3"},
 {name: "Duck Life 4"},
 {name: "Duck Life 5"},
+{name: "Run", href: "g/flash/run.swf"},
+{name: "Run 2", href: "g/flash/run-2.swf"},
+{name: "Run 3", href: "g/flash/run3.swf"},
+{name: "doom", href: "g/flash/doom.swf"},
 
 {title: "Tools", type: "section"},
 {name: "Ruffle Flash Player", href: "g/g/Ruffle/Ruffle.html"},
 {name: "Code Editor", type: "raw"},
 {name: "Web Retro"},
- {name: "Proxy Browser", href: "g/proxybrowser.html"},
+ {name: "Proxy Browser", href: "g/proxybrowser.html", src: "proxybrowser.webp"},
 ];
 
 var container = createElement('div', {
