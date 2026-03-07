@@ -348,11 +348,11 @@ if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode')
 
 if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
 var theme = getStoredJSON('gams', {key: 'theme'});
-if (theme == 'light') {
+if (theme === 'light') {
 //eww you monster
 setLight();
 l('darkModeInput').checked = false;
-} else if (theme == 'dark') {
+} else if (theme === 'dark') {
 setDark();
 l('darkModeInput').checked = true;
 }
@@ -360,19 +360,15 @@ l('darkModeInput').checked = true;
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
 var newColorScheme = event.matches ? "dark" : "light";
-if (newColorScheme == 'dark') {
+if (newColorScheme === 'dark') {
 l('darkModeInput').checked = true
 }
-if (newColorScheme == 'light') {
+if (newColorScheme === 'light') {
 l('darkModeInput').checked = false
 }
 });
 
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-l('darkModeInput').checked = true;
-} else {
-l('darkModeInput').checked = false;
-}
+l('darkModeInput').checked = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 }
 
@@ -401,7 +397,7 @@ function createElement(tag, prps) {
 var elm = document.createElement(tag);
 if (prps) {
 var props = Object.getOwnPropertyNames(prps);
-for (i=0;i<props.length;i++) {
+for (var i=0;i<props.length;i++) {
 elm.setAttribute(props[i], prps[props[i]]);
 }
 }
@@ -492,10 +488,10 @@ var gamsList = [
 {name: "Duck Life 3"},
 {name: "Duck Life 4"},
 {name: "Duck Life 5"},
-{name: "Run", href: "g/flash/run.swf"},
-{name: "Run 2", href: "g/flash/run-2.swf"},
-{name: "Run 3", href: "g/flash/run3.swf"},
-{name: "doom", href: "g/flash/doom.swf"},
+{name: "Run", href: "g/g/Ruffle/player.html?swf=../../flash/run.swf"},
+{name: "Run 2", href: "g/g/Ruffle/player.html?swf=../../flash/run-2.swf"},
+{name: "Run 3", href: "g/g/Ruffle/player.html?swf=../../flash/run3.swf"},
+{name: "doom", href: "g/g/Ruffle/player.html?swf=../../flash/doom.swf"},
 
 {title: "Tools", type: "section"},
 {name: "Ruffle Flash Player", href: "g/g/Ruffle/Ruffle.html"},
@@ -507,19 +503,21 @@ var gamsList = [
 var container = createElement('div', {
 id: 'container'
 })
+var listFragment = document.createDocumentFragment();
 
 var currentSection = undefined;
-for (j = 0; j < gamsList.length; j++){
+for (var j = 0; j < gamsList.length; j++){
+var gam = gamsList[j];
 
-if (gamsList[j].title) {currentSection = gamsList[j].title}
+if (gam.title) {currentSection = gam.title}
 
-if(gamsList[j].name){
+if(gam.name){
 totalGames += 1;
 var tile = createElement('div', {
 class : 'tile'
 });
-var imgName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
-var imgSrc = (gamsList[j].img) || 'img/' + imgName + '.png';
+var imgName = gam.name.toLowerCase().replace(/\s/g, '');
+var imgSrc = gam.img || ('img/' + imgName + '.png');
 var img = createElement('img', {
 class : 'img',
 src : imgSrc
@@ -529,14 +527,14 @@ tile.appendChild(img);
 var p = createElement('p', {
 class : 'name'
 });
-p.innerHTML = gamsList[j].name;
+p.textContent = gam.name;
 tile.appendChild(p);
 
 if (currentSection) {
 var section = createElement('span', {
 style: "display:none"
 });
-section.innerHTML = currentSection;
+section.textContent = currentSection;
 tile.appendChild(section);
 }
 
@@ -544,34 +542,34 @@ var modeX = createElement('span', {
 class: "modeX",
 style: "display:none"
 });
-modeX.innerHTML = gamsList[j].type;
+modeX.textContent = gam.type;
 tile.appendChild(modeX);
 
-var aName = (gamsList[j].name).toLowerCase().replace(/\s/g, '');
-var aHref = (gamsList[j].href) || 'g/' + imgName + '.html';
+var aHref = gam.href || ('g/' + imgName + '.html');
 var a = createElement('a', {
 class : 'href',
 href : aHref
 });
 tile.appendChild(a);
-container.appendChild(tile);
-}else if (gamsList[j].title){
+listFragment.appendChild(tile);
+}else if (gam.title){
 var title = createElement('h2', {
 style: "float:left;width:100%"
 });
-container.appendChild(createElement('br'));
-title.innerHTML = gamsList[j].title;
-container.appendChild(title);
-container.appendChild(createElement('br'));
+listFragment.appendChild(createElement('br'));
+title.textContent = gam.title;
+listFragment.appendChild(title);
+listFragment.appendChild(createElement('br'));
 }
 }
+container.appendChild(listFragment);
 l('contain').appendChild(container);
 l('totalGames').innerText = totalGames;
 
 var mode = 'gam'; //embed, gam, blank, direct
 //Init
 var gams = document.getElementsByClassName("tile");
-for (i = 0; i < gams.length; i++){
+for (var i = 0; i < gams.length; i++){
 gams[i].onclick = function(e){
 var href = (this.getElementsByClassName("href")[0].href);
 var name = (this.getElementsByClassName("name")[0].innerText);
