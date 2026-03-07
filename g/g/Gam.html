@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Gam</title>
 <style>
 :root{
 --tx: black;
@@ -311,10 +312,22 @@ function setFavicon(href) {
 function l(e){return document.getElementById(e)}
 var urlParams = new URLSearchParams(window.location.search);
 var name = (urlParams.get('name') || 'Gam');
-var icon = (urlParams.get('icon') || '');
-var src = (urlParams.get('src') || '');
+var gamBasePath = window.location.pathname.replace(/\/g\/g\/Gam\.html$/, '/');
+var gamBaseUrl = window.location.origin + gamBasePath;
 
-l("name").innerHTML = name;
+function resolveGamUrl(rawUrl) {
+  if (!rawUrl) {return '';}
+  try {
+    return new URL(rawUrl, gamBaseUrl).href;
+  } catch (_e) {
+    return rawUrl;
+  }
+}
+
+var icon = resolveGamUrl(urlParams.get('icon') || '');
+var src = resolveGamUrl(urlParams.get('src') || '');
+
+l("name").textContent = name;
 document.title = name;
 
 l("icon-img").src = icon;

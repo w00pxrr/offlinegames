@@ -1073,6 +1073,12 @@ var name = tile.getAttribute('data-name');
 var modeX = tile.getAttribute('data-modex');
 var pic = new URL(tile.getAttribute('data-pic'), window.location.href).href;
 var mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
+var gameShellQuery = new URLSearchParams({
+icon: pic,
+name: name,
+src: href
+}).toString();
+var gameShellUrl = `g/g/Gam.html?${gameShellQuery}`;
 
 if (modeX === "raw") {mode = modeX;}
 
@@ -1081,7 +1087,7 @@ window.open(href);
 }
 
 if (mode === 'direct') {
-window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+window.location = gameShellUrl;
 }
 
 if (mode === 'blank') {
@@ -1092,9 +1098,9 @@ if (mode === 'blank') {
  const body = doc.body;
  body.style = "margin:0";
  const iframe = w.document.createElement('iframe');
- iframe.style = "width:100vw;height:100vh";
+iframe.style = "width:100vw;height:100vh";
 iframe.setAttribute('frameborder', "0");
-iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
+iframe.src = gameShellUrl;
 body.appendChild(iframe);
 
  const script = w.document.createElement('script');
@@ -1157,7 +1163,7 @@ doc.head.appendChild(script);
 }
 
 if (mode === 'gam') {
-window.open(`g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`);
+window.open(gameShellUrl);
 }
 
 if (mode === 'embed') {
