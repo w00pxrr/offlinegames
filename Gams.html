@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
-<link rel="stylesheet" href="assets/new.min.css">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
  <script defer src="https://cloud.umami.is/script.js" data-website-id="ac0c3422-a178-4ef1-92f3-8d6f875896d0"></script>
   <!-- Primary Meta Tags -->
   <title>Gams</title>
@@ -37,6 +38,16 @@
 :root {
 --gams-panel-border: rgba(255, 255, 255, 0.12);
 --gams-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+--nc-tx-1: #000000;
+--nc-tx-2: #1A1A1A;
+--nc-bg-1: #FFFFFF;
+--nc-bg-2: #F6F8FA;
+--nc-bg-3: #E5E7EB;
+--nc-lk-1: #0070F3;
+--nc-lk-2: #0366D6;
+--nc-lk-tx: #FFFFFF;
+--nc-ac-1: #79FFE1;
+--nc-ac-tx: #0C4047;
 }
 
 html, body {
@@ -281,6 +292,10 @@ box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+.tile .card-content {
+padding: 0.75rem 0.65rem 0.85rem;
+}
+
 .tile img {
 width: 100%;
 aspect-ratio: 1 / 1;
@@ -457,14 +472,18 @@ gap: 12px;
 </head>
 
 <body>
+<section class="section">
+<div class="container is-max-desktop">
 <div class="hero">
 <h1 class="title">Gams - Forked by w00pxrr</h1>
 <div id="announcementBanner" class="announcement-banner hidden"></div>
 <p class="subtitle">Pick a game, star your favorites, and launch instantly in your preferred mode.</p>
 </div>
 
-<div class="top-panel">
-<div class="control-row">
+<div class="top-panel box">
+<div class="columns is-variable is-4 is-vcentered">
+<div class="column">
+<div class="field is-grouped is-grouped-multiline">
 <div class="control">
 <span class="control-label">Dark Mode</span>
 <label class="switch">
@@ -475,6 +494,7 @@ gap: 12px;
 
 <div class="control">
 <span class="control-label">Open Gam Mode</span>
+<div class="select is-medium">
 <select id='gamMode' aria-label="Open game mode">
 <option value="gam">In new tab</option>
 <option value="embed">On this tab</option>
@@ -484,10 +504,15 @@ gap: 12px;
 </select>
 </div>
 </div>
+</div>
+</div>
 
+<div class="column">
 <div class="status-row">
-<p class="total-games">Total Games: <span id="totalGames">Loading...</span></p>
-<a class="report-link" href="https://github.com/w00pxrr/w00pxrr.github.io">Found a bug? Report it here</a>
+<p class="total-games">Total Games: <span class="tag is-link is-light is-medium" id="totalGames">Loading...</span></p>
+<a class="report-link button is-link is-light" href="https://github.com/w00pxrr/w00pxrr.github.io">Found a bug? Report it here</a>
+</div>
+</div>
 </div>
 </div>
 
@@ -505,14 +530,22 @@ gap: 12px;
 <div id="contain">
 
 
-<a href="Settings.html" class="tile"><img alt="settings" class="img" src="img/gams-g.png"><span class="name">Settings</span></a>
-<a href="g/about.html" class="tile"><img alt="about" class="img" src="img/gams-g.png"><span class="name">About</span></a>
+<a href="Settings.html" class="tile card">
+<div class="card-image"><figure class="image is-square"><img alt="settings" class="img" src="img/gams-g.png"></figure></div>
+<div class="card-content"><span class="name">Settings</span></div>
+</a>
+<a href="g/about.html" class="tile card">
+<div class="card-image"><figure class="image is-square"><img alt="about" class="img" src="img/gams-g.png"></figure></div>
+<div class="card-content"><span class="name">About</span></div>
+</a>
 
 </div>
 
 <div id="searcher">
-<div id="searchToggle" class="search-toggle" role="button" tabindex="0" aria-label="Open search">&#128269;</div>
+<button id="searchToggle" class="search-toggle button is-rounded is-light" type="button" aria-label="Open search">&#128269;</button>
 </div>
+</div>
+</section>
 
 <script>
 try {
@@ -665,12 +698,11 @@ setTimeout(function(){
 elm.remove();
 var searcher = l('searcher');
 if (!searcher) {return;}
-var toggle = document.createElement('div');
+var toggle = document.createElement('button');
 toggle.id = 'searchToggle';
-toggle.className = 'search-toggle';
+toggle.className = 'search-toggle button is-rounded is-light';
 toggle.textContent = '\uD83D\uDD0D';
-toggle.setAttribute('role', 'button');
-toggle.setAttribute('tabindex', '0');
+toggle.setAttribute('type', 'button');
 toggle.setAttribute('aria-label', 'Open search');
 toggle.onclick = function() { searchbar(toggle); };
 toggle.onkeydown = function(event) {
@@ -1031,7 +1063,7 @@ return title;
 // Builds a single game tile including favorite control.
 function makeTile(game) {
 var tile = createElement('div', {
-class: 'tile',
+class: 'tile card',
 'data-game-id': game.id,
 'data-href': game.href,
 'data-name': game.name,
@@ -1058,13 +1090,19 @@ class: 'img',
 src: game.img,
 alt: game.name
 });
-tile.appendChild(img);
+var imageFigure = createElement('figure', {class: 'image is-square'});
+imageFigure.appendChild(img);
+var imageWrap = createElement('div', {class: 'card-image'});
+imageWrap.appendChild(imageFigure);
+tile.appendChild(imageWrap);
 
 var p = createElement('p', {
 class: 'name'
 });
 p.textContent = game.name;
-tile.appendChild(p);
+var content = createElement('div', {class: 'card-content'});
+content.appendChild(p);
+tile.appendChild(content);
 
 return tile;
 }
