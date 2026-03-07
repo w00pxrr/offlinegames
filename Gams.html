@@ -38,6 +38,7 @@
 :root {
 --gams-panel-border: rgba(255, 255, 255, 0.12);
 --gams-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+--gams-title-color: #000000;
 --nc-tx-1: #000000;
 --nc-tx-2: #1A1A1A;
 --nc-bg-1: #FFFFFF;
@@ -138,6 +139,7 @@ font-family: 'facon', sans-serif;
 letter-spacing: 3pt;
 margin: 0;
 line-height: 1;
+color: var(--gams-title-color);
 }
 
 .hero {
@@ -189,13 +191,6 @@ border: 1px solid var(--gams-panel-border);
 background: color-mix(in srgb, var(--nc-bg-2) 82%, transparent);
 box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 margin-bottom: 22px;
-}
-
-.control-row {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
 }
 
 .control {
@@ -257,6 +252,7 @@ align-items: stretch;
 justify-content: center;
 }
 
+/*noinspection CssUnusedSymbol*/
 #container {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -265,10 +261,12 @@ align-items: stretch;
 justify-content: center;
 }
 
+/*noinspection CssUnusedSymbol*/
 #contain > #container {
 grid-column: 1 / -1;
 }
 
+/*noinspection CssUnusedSymbol*/
 h2.section-title {
 grid-column: 1 / -1;
 margin: 14px 0 4px;
@@ -322,6 +320,7 @@ font-size: 0.95rem;
 letter-spacing: 0.01em;
 }
 
+/*noinspection CssUnusedSymbol*/
 .favorite-btn {
 position: absolute;
 top: 14px;
@@ -427,6 +426,7 @@ background: color-mix(in srgb, var(--nc-bg-1) 85%, transparent);
 box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
 }
 
+/*noinspection CssUnusedSymbol*/
 .search-input {
 width: 20px;
 padding: 9px 11px;
@@ -450,10 +450,6 @@ padding: 16px;
 
 .top-panel {
 padding: 14px;
-}
-
-.control-row {
-gap: 12px;
 }
 
 #gamMode {
@@ -650,6 +646,7 @@ banner.classList.add('hidden');
 
 // Applies the light color palette to theme variables.
 function setLight() {
+document.documentElement.style.setProperty('--gams-title-color', "#000000");
 document.documentElement.style.setProperty('--nc-tx-1', "#000000");
 document.documentElement.style.setProperty('--nc-tx-2', "#1A1A1A");
 document.documentElement.style.setProperty('--nc-bg-1', "#FFFFFF");
@@ -664,6 +661,7 @@ document.documentElement.style.setProperty('--nc-ac-tx', "#0C4047");
 
 // Applies the dark color palette to theme variables.
 function setDark() {
+document.documentElement.style.setProperty('--gams-title-color', "#ffffff");
 document.documentElement.style.setProperty('--nc-tx-1', "#ffffff");
 document.documentElement.style.setProperty('--nc-tx-2', "#eeeeee");
 document.documentElement.style.setProperty('--nc-bg-1', "#000000");
