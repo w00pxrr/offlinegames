@@ -31,16 +31,7 @@
   <meta name="language" content="English">
   <meta name="revisit-after" content="5 days days">
   <meta name="author" content="Parker Solomon">
-<script type="application/javascript">
-function getIP(json) {
-  const blockedIPs = [" 68.189.72.79"];
-  if (blockedIPs.includes(json.ip)) {
-    alert("Access denied. You are blocked.");
-    window.location = "chrome://newtab";
-  }
-}
-</script>
-<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>   
+
 <style>
 html, body {
 transition: .5s;
