@@ -34,13 +34,24 @@
   <meta name="author" content="Parker Solomon">
 
 <style>
+:root {
+--gams-panel-border: rgba(255, 255, 255, 0.12);
+--gams-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+}
+
 html, body {
 transition: .5s;
 }
 
 /*Override max width of body set in new.css*/
 body {
- max-width: 1000px;
+max-width: 1200px;
+padding: 24px 18px 56px;
+background:
+radial-gradient(circle at 12% 6%, rgba(24, 144, 255, 0.2), transparent 34%),
+radial-gradient(circle at 85% 12%, rgba(255, 130, 80, 0.22), transparent 32%),
+linear-gradient(140deg, var(--nc-bg-1) 0%, var(--nc-bg-2) 100%);
+min-height: 100vh;
 }
 
 @font-face {
@@ -53,6 +64,7 @@ position: relative;
 display: inline-block;
 width: 60px;
 height: 34px;
+vertical-align: middle;
 }
 
 .switch input {
@@ -109,54 +121,209 @@ border-radius: 50%;
 }
 
 .title {
-font-size: 50pt;
+font-size: clamp(2rem, 5.8vw, 4rem);
 font-family: 'facon', sans-serif;
 letter-spacing: 3pt;
+margin: 0;
+line-height: 1;
+}
+
+.hero {
+margin-bottom: 18px;
+padding: 22px 24px;
+border: 1px solid var(--gams-panel-border);
+border-radius: 18px;
+background: linear-gradient(135deg, color-mix(in srgb, var(--nc-bg-2) 84%, #1f5fff 16%), color-mix(in srgb, var(--nc-bg-1) 88%, #ff6d3a 12%));
+box-shadow: var(--gams-shadow);
+}
+
+.subtitle {
+margin: 10px 0 0;
+font-size: 0.95rem;
+letter-spacing: 0.02em;
+color: var(--nc-tx-2);
+}
+
+.announcement-banner {
+margin: 12px 0 8px;
+padding: 10px 12px;
+border-radius: 10px;
+border: 1px solid color-mix(in srgb, var(--nc-lk-1) 45%, transparent);
+background: color-mix(in srgb, var(--nc-bg-1) 82%, #f8c548 18%);
+font-weight: 700;
+font-size: 0.95rem;
+}
+
+.announcement-banner.hidden {
+display: none;
+}
+
+.announcement-banner a {
+color: inherit;
+text-decoration: none;
+}
+
+.announcement-banner a:hover {
+text-decoration: underline;
+}
+
+.top-panel {
+display: grid;
+grid-template-columns: 1fr;
+gap: 14px;
+padding: 18px;
+border-radius: 16px;
+border: 1px solid var(--gams-panel-border);
+background: color-mix(in srgb, var(--nc-bg-2) 82%, transparent);
+box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+margin-bottom: 22px;
+}
+
+.control-row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+}
+
+.control {
+display: inline-flex;
+align-items: center;
+gap: 10px;
+}
+
+.control-label {
+font-weight: 700;
+font-size: 0.9rem;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(--nc-tx-2);
+}
+
+#gamMode {
+min-width: 220px;
+padding: 8px 10px;
+border-radius: 9px;
+border: 1px solid var(--gams-panel-border);
+background: var(--nc-bg-1);
+color: var(--nc-tx-1);
+}
+
+.status-row {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+justify-content: space-between;
+gap: 10px;
+}
+
+.total-games {
+margin: 0;
+font-weight: 700;
+}
+
+.report-link {
+font-size: 0.92rem;
+font-weight: 700;
+text-decoration: none;
+padding: 8px 10px;
+border-radius: 9px;
+border: 1px solid var(--gams-panel-border);
+background: color-mix(in srgb, var(--nc-bg-1) 90%, transparent);
+}
+
+.report-link:hover {
+background: var(--nc-bg-3);
+}
+
+#contain {
+position: relative;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+gap: 16px;
+align-items: stretch;
+}
+
+#container {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+gap: 16px;
+align-items: stretch;
+}
+
+#contain > #container {
+grid-column: 1 / -1;
+}
+
+h2.section-title {
+grid-column: 1 / -1;
+margin: 14px 0 4px;
+padding-bottom: 6px;
+font-size: 1.32rem;
+letter-spacing: 0.05em;
+text-transform: uppercase;
+border-bottom: 2px solid color-mix(in srgb, var(--nc-lk-1) 45%, transparent);
 }
 
 .tile {
 color: var(--nc-tx-1);
-height: auto;
-width: auto;
-border-radius: 10px;
-border: 1px solid var(--nc-tx-1);
+border-radius: 14px;
+border: 1px solid color-mix(in srgb, var(--nc-bg-3) 68%, var(--nc-tx-1) 32%);
 text-align: center;
 position: relative;
-float: left;
-margin: 20px;
+padding: 10px;
+margin: 0;
+display: flex;
+flex-direction: column;
+gap: 9px;
+background: color-mix(in srgb, var(--nc-bg-1) 88%, transparent);
+box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .tile img {
-width: 200px;
-height: 200px;
-border-radius: 10px;
+width: 100%;
+aspect-ratio: 1 / 1;
+height: auto;
+border-radius: 11px;
+object-fit: cover;
 }
 
 .tile:hover {
-font-weight: bold;
 cursor: pointer;
-background: var(--nc-bg-3);
+background: color-mix(in srgb, var(--nc-bg-2) 72%, transparent);
+transform: translateY(-4px);
+box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+}
+
+.name {
+display: block;
+margin: 0;
+font-weight: 800;
+font-size: 0.95rem;
+letter-spacing: 0.01em;
 }
 
 .favorite-btn {
 position: absolute;
-top: 8px;
-right: 8px;
-width: 28px;
-height: 28px;
+top: 14px;
+right: 14px;
+width: 32px;
+height: 32px;
 border-radius: 50%;
-border: 1px solid var(--nc-tx-1);
-background: var(--nc-bg-1);
-color: var(--nc-tx-1);
-font-size: 14pt;
+border: 1px solid color-mix(in srgb, var(--nc-tx-1) 48%, transparent);
+background: color-mix(in srgb, var(--nc-bg-1) 84%, transparent);
+color: #ffcc4d;
+font-size: 16pt;
 line-height: 1;
 cursor: pointer;
 padding: 0;
 z-index: 2;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 .favorite-btn:hover {
-background: var(--nc-bg-3);
+background: color-mix(in srgb, var(--nc-bg-1) 66%, #f6b419 34%);
 }
 
 .shade {
@@ -165,8 +332,8 @@ background-color: var(--nc-bg-3);
 position: fixed;
 width: 100%;
 height: 100vh;
-top: 0px;
-left: 0px;
+top: 0;
+left: 0;
 z-index: 100;
 display: block;
 }
@@ -174,11 +341,11 @@ display: block;
 .cont {
 opacity: 1;
 color: var(--nc-tx-1);
-background-color: var(--nc-bg-3);
+background-color: var(--nc-bg-2);
 z-index: 1000;
 width: calc(100vw - 70px);
 height: calc(100vh - 70px);
-border-radius: 10px;
+border-radius: 16px;
 text-align: center;
 position: fixed;
 left: 50%;
@@ -204,38 +371,131 @@ transform: translateX(-50%) translateY(-50%);
 0%{transform:rotate(0deg)}
 100%{transform:rotate(360deg)}
 }
+
+#newWin {
+position: fixed;
+top: -44px;
+left: -44px;
+width: 34px;
+height: 34px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+text-decoration: none;
+font-size: 1.15rem;
+border-radius: 50%;
+background: var(--nc-bg-1);
+border: 1px solid var(--gams-panel-border);
+}
+
+#searcher {
+position: fixed;
+right: 14px;
+top: 14px;
+z-index: 100;
+}
+
+.search-toggle {
+width: 44px;
+height: 44px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+font-size: 1.2rem;
+border-radius: 999px;
+cursor: pointer;
+border: 1px solid var(--gams-panel-border);
+background: color-mix(in srgb, var(--nc-bg-1) 85%, transparent);
+box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.search-input {
+width: 20px;
+padding: 9px 11px;
+font-size: 13pt;
+border-radius: 999px;
+border: 1px solid var(--gams-panel-border);
+background: color-mix(in srgb, var(--nc-bg-1) 95%, transparent);
+color: var(--nc-tx-1);
+box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+transition: all 0.5s ease-in-out;
+}
+
+@media (max-width: 760px) {
+body {
+padding: 16px 12px 40px;
+}
+
+.hero {
+padding: 16px;
+}
+
+.top-panel {
+padding: 14px;
+}
+
+.control-row {
+gap: 12px;
+}
+
+#gamMode {
+min-width: 180px;
+width: 100%;
+}
+
+#container {
+grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+gap: 12px;
+}
+
+#contain {
+grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+gap: 12px;
+}
+}
 </style>
 </head>
 
-<body onload="setSavedTheme()">
-<div>
+<body>
+<div class="hero">
 <h1 class="title">Gams - Forked by w00pxrr</h1>
+<div id="announcementBanner" class="announcement-banner hidden"></div>
+<p class="subtitle">Pick a game, star your favorites, and launch instantly in your preferred mode.</p>
 </div>
 
-<label>Dark Mode:</label>
+<div class="top-panel">
+<div class="control-row">
+<div class="control">
+<span class="control-label">Dark Mode</span>
 <label class="switch">
-<input id="darkModeInput" type="checkbox" checked onchange="changeTheme(this)">
+<input id="darkModeInput" type="checkbox" checked>
 <span class="slider round"></span>
 </label>
+</div>
 
-<a href="https://github.com/w00pxrr/w00pxrr.github.io">Found a bug? report it here</a>
-
-<p>Total Games: <span id="totalGames">Loading...</span></p>
-
-<label>Open Gam Mode:</label>
-<select onchange='changeGamMode(this)' id='gamMode'>
+<div class="control">
+<span class="control-label">Open Gam Mode</span>
+<select id='gamMode' aria-label="Open game mode">
 <option value="gam">In new tab</option>
 <option value="embed">On this tab</option>
 <option value="blank">In an about:blank tab</option>
 <option value="direct">Replace this tab</option>
 <option value="raw">Raw link in new tab</option>
 </select>
+</div>
+</div>
+
+<div class="status-row">
+<p class="total-games">Total Games: <span id="totalGames">Loading...</span></p>
+<a class="report-link" href="https://github.com/w00pxrr/w00pxrr.github.io">Found a bug? Report it here</a>
+</div>
+</div>
 
 <div class="overlay" id="overlay" style="display:none">
 <div class="shade" id="shade"></div>
 <div class="cont" id="cont">
-<a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">&#8599;</a>
-<iframe style="width:100%;height:100%;border-radius:10px" frameborder="0" id="mainGam"></iframe>
+<a id="newWin" title="Open in new window" target="_blank" rel="noopener noreferrer">&#8599;</a>
+<iframe style="width:100%;height:100%;border-radius:10px" id="mainGam" title="Embedded game player"></iframe>
 
 <div class='loader' id='loader'></div>
 </div>
@@ -251,21 +511,98 @@ transform: translateX(-50%) translateY(-50%);
 </div>
 
 <div id="searcher">
-<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:18pt; transition: all 0.3s ease-in-out; text-align:center;">&#128269;</div>
+<div id="searchToggle" class="search-toggle" role="button" tabindex="0" aria-label="Open search">&#128269;</div>
 </div>
 
 <script>
 try {
  getStoredJSON("gams", {key: "gamMode"});
-} catch(e) {
+} catch(_e) {
  localStorage.removeItem("gams");
  storeJSON("gams", {key: "gamMode", value: "gam"})
 }
 
-const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+const BroadcastDisguise = (typeof BroadcastChannel !== 'undefined')
+? new BroadcastChannel('BroadcastDisguise')
+: null;
 
 function l(e) {
 return document.getElementById(e);
+}
+
+function initPage() {
+setSavedTheme();
+loadAnnouncement();
+bindSearchToggle();
+bindControls();
+}
+
+function bindSearchToggle() {
+var toggle = l('searchToggle');
+if (!toggle) {return;}
+toggle.onclick = function() {
+searchbar(toggle);
+};
+toggle.onkeydown = function(event) {
+if (event.key === 'Enter' || event.key === ' ') {
+event.preventDefault();
+searchbar(toggle);
+}
+};
+}
+
+function bindControls() {
+var darkModeInput = l('darkModeInput');
+if (darkModeInput) {
+darkModeInput.onchange = function() {
+changeTheme(darkModeInput);
+};
+}
+
+var gamMode = l('gamMode');
+if (gamMode) {
+gamMode.onchange = function() {
+changeGamMode(gamMode);
+};
+}
+}
+
+function loadAnnouncement() {
+fetch('announcements.json', {cache: 'no-store'})
+.then(function(response) {
+if (!response.ok) {throw new Error('Failed to load announcements');}
+return response.json();
+})
+.then(function(data) {
+var banner = l('announcementBanner');
+if (!banner) {return;}
+
+if (!data || data.enabled === false || !data.text) {
+banner.classList.add('hidden');
+banner.textContent = '';
+return;
+}
+
+banner.textContent = '';
+if (data.href) {
+var target = data.newTab === false ? '_self' : '_blank';
+var link = document.createElement('a');
+link.href = data.href;
+link.target = target;
+link.rel = 'noopener noreferrer';
+link.textContent = data.text;
+banner.appendChild(link);
+} else {
+banner.textContent = data.text;
+}
+
+banner.classList.remove('hidden');
+})
+.catch(function() {
+var banner = l('announcementBanner');
+if (!banner) {return;}
+banner.classList.add('hidden');
+});
 }
 
 function setLight() {
@@ -295,40 +632,82 @@ document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
 }
 
 function searchbar(elm) {
-elm.remove()
-l('searcher').innerHTML += `<input id="searchQuery" type="search" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.5s ease-in-out;" onblur="searchicon(this)" onfocus="this.style.width = '120px'">`;
-l('searchQuery').focus();
-l('searchQuery').style.width = '120px';
+if (elm) {elm.remove();}
+var searcher = l('searcher');
+if (!searcher) {return;}
+var input = document.createElement('input');
+input.id = 'searchQuery';
+input.className = 'search-input';
+input.type = 'search';
+input.placeholder = 'Search...';
+input.autocomplete = 'off';
+input.onkeyup = startSearch;
+input.onblur = function() { searchicon(input); };
+input.onfocus = function() { this.style.width = '180px'; };
+searcher.appendChild(input);
+input.focus();
+input.style.width = '180px';
 }
 
 function searchicon(elm) {
+if (!elm) {return;}
 elm.style.width = '20px';
 setTimeout(function(){
 elm.remove();
-l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:18pt; transition: all 0.3s ease-in-out; text-align:center;">&#128269;<\/div>`;
+var searcher = l('searcher');
+if (!searcher) {return;}
+var toggle = document.createElement('div');
+toggle.id = 'searchToggle';
+toggle.className = 'search-toggle';
+toggle.textContent = '\uD83D\uDD0D';
+toggle.setAttribute('role', 'button');
+toggle.setAttribute('tabindex', '0');
+toggle.setAttribute('aria-label', 'Open search');
+toggle.onclick = function() { searchbar(toggle); };
+toggle.onkeydown = function(event) {
+if (event.key === 'Enter' || event.key === ' ') {
+event.preventDefault();
+searchbar(toggle);
+}
+};
+searcher.appendChild(toggle);
 }, 500);
 }
 
 function getStoredJSON(key, data) {
 if (data && data.key && (localStorage[key] !== 'null')) {
-var inStore = JSON.parse(localStorage[key]);
-if ((typeof inStore === 'object') && inStore.hasOwnProperty(data.key)) {
+var inStore;
+try {
+inStore = JSON.parse(localStorage[key]);
+} catch (_e) {
+return null;
+}
+if ((typeof inStore === 'object') && Object.prototype.hasOwnProperty.call(inStore, data.key)) {
 return inStore[data.key];
 }
 }
 if (localStorage[key] && !data) {
+try {
 return JSON.parse(localStorage[key]);
+} catch (_e) {
+return null;
+}
 }
 return null;
 }
 
 function storeJSON(key, data) {
+var inStore;
 if (localStorage[key]) {
-var inStore = JSON.parse(localStorage[key]) || {};
+try {
+inStore = JSON.parse(localStorage[key]) || {};
+} catch (_e) {
+inStore = {};
+}
 inStore[data.key] = data.value;
 localStorage[key] = JSON.stringify(inStore);
 }else{
-var inStore = {};
+inStore = {};
 inStore[data.key] = data.value;
 localStorage[key] = JSON.stringify(inStore);
 }
@@ -361,8 +740,11 @@ value: input.value
 }
 
 function setSavedTheme() {
+var darkModeInput = l('darkModeInput');
+if (!darkModeInput) {return;}
 //Set Gam Mode
-if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
+var gamModeSelect = l('gamMode');
+if (gamModeSelect && getStoredJSON('gams', {key: 'gamMode'})) {gamModeSelect.value = getStoredJSON('gams', {key: 'gamMode'})}
 //Set gam Mode
 
 if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
@@ -370,36 +752,46 @@ var theme = getStoredJSON('gams', {key: 'theme'});
 if (theme === 'light') {
 //eww you monster
 setLight();
-l('darkModeInput').checked = false;
+darkModeInput.checked = false;
 } else if (theme === 'dark') {
 setDark();
-l('darkModeInput').checked = true;
+darkModeInput.checked = true;
 }
 } else {
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+if (media) {
+var onThemePrefChange = function(event) {
 var newColorScheme = event.matches ? "dark" : "light";
 if (newColorScheme === 'dark') {
-l('darkModeInput').checked = true
+darkModeInput.checked = true;
 }
 if (newColorScheme === 'light') {
-l('darkModeInput').checked = false
+darkModeInput.checked = false;
 }
-});
+};
+if (typeof media.addEventListener === 'function') {
+media.addEventListener('change', onThemePrefChange);
+} else if (typeof media.addListener === 'function') {
+media.addListener(onThemePrefChange);
+}
+darkModeInput.checked = media.matches;
+}
+}
+}
 
-l('darkModeInput').checked = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-}
-
-l('shade').onclick = function() {
+var shadeElm = l('shade');
+if (shadeElm) {
+shadeElm.onclick = function() {
 l('overlay').style.display='none';
 l("mainGam").src = '';
 l("newWin").href = '';
+};
 }
 
 function startSearch() {
 var input, filter, li, i;
 input = l("searchQuery");
+if (!input) {return;}
 filter = input.value.toUpperCase();
 li = document.body.getElementsByClassName("tile");
 for (i = 0; i < li.length; i++) {
@@ -422,8 +814,6 @@ elm.setAttribute(props[i], prps[props[i]]);
 
 return elm;
 }
-
-var totalGames = 0;
 
 var gamsList = [
 {title: "Basic", type: "section"},
@@ -510,12 +900,13 @@ var gamsList = [
 {name: "Run 2", href: "g/g/Ruffle/player.html?swf=../../flash/run-2.swf"},
 {name: "Run 3", href: "g/g/Ruffle/player.html?swf=../../flash/run3.swf"},
 {name: "doom", href: "g/g/Ruffle/player.html?swf=../../flash/doom.swf"},
+ {name: "Papa's Burgeria", href: "g/g/Ruffle/player.html?swf=../../flash/papasburgeria.swf"},
 
-{title: "Tools", type: "section"},
+ {title: "Tools", type: "section"},
 {name: "Ruffle Flash Player", href: "g/g/Ruffle/Ruffle.html"},
 {name: "Code Editor", type: "raw"},
 {name: "Web Retro"},
- {name: "Proxy Browser", href: "g/proxybrowser.html", src: "proxybrowser.webp"},
+ {name: "Proxy Browser", href: "g/proxybrowser.html"},
 ];
 
 function setCookie(name, value, days) {
@@ -573,7 +964,7 @@ renderGames();
 
 var sectionOrder = [];
 var gamesData = [];
-var currentSection = undefined;
+var currentSection;
 
 for (var j = 0; j < gamsList.length; j++) {
 var gam = gamsList[j];
@@ -597,7 +988,7 @@ index: gamesData.length
 });
 }
 
-totalGames = gamesData.length;
+var totalGames = gamesData.length;
 l('totalGames').innerText = totalGames;
 
 var container = createElement('div', {id: 'container'});
@@ -605,7 +996,7 @@ l('contain').appendChild(container);
 
 function makeSectionTitle(titleText) {
 var title = createElement('h2', {
-style: "float:left;width:100%"
+class: "section-title"
 });
 title.textContent = titleText;
 return title;
@@ -670,6 +1061,7 @@ window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
 
 if (mode === 'blank') {
  const w = window.open();
+ if (!w) {return;}
  const doc = w.document;
 
  const body = doc.body;
@@ -681,7 +1073,7 @@ iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
 body.appendChild(iframe);
 
  const script = w.document.createElement('script');
- script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+ script.textContent = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
 
 function setFavicon(href) {
 var existFav = document.querySelectorAll('link[rel*="icon"]');
@@ -699,7 +1091,7 @@ document.getElementsByTagName('head')[0].appendChild(link);
 function getStoredJSON(key, data) {
 if (data && data.key && (localStorage[key] !== 'null')) {
 var inStore = JSON.parse(localStorage[key]);
-if ((typeof inStore === 'object') && inStore.hasOwnProperty(data.key)) {
+if ((typeof inStore === 'object') && Object.prototype.hasOwnProperty.call(inStore, data.key)) {
 return inStore[data.key];
 }
 }
@@ -727,9 +1119,11 @@ setFavicon('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAA
 
 applyDisguise();
 
+if (BroadcastDisguise) {
 BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
+}
 `;
 doc.head.appendChild(script);
 }
@@ -770,9 +1164,7 @@ if (favoriteMap[gamesData[k].id]) {favoriteGames.push(gamesData[k]);}
 favoriteGames.sort(function(a, b) { return a.index - b.index; });
 
 if (favoriteGames.length > 0) {
-fragment.appendChild(createElement('br'));
 fragment.appendChild(makeSectionTitle('Favorites'));
-fragment.appendChild(createElement('br'));
 for (var f = 0; f < favoriteGames.length; f++) {
 fragment.appendChild(makeTile(favoriteGames[f]));
 }
@@ -788,9 +1180,7 @@ sectionGames.push(gamesData[g]);
 }
 if (sectionGames.length === 0) {continue;}
 
-fragment.appendChild(createElement('br'));
 fragment.appendChild(makeSectionTitle(sectionName));
-fragment.appendChild(createElement('br'));
 for (var t = 0; t < sectionGames.length; t++) {
 fragment.appendChild(makeTile(sectionGames[t]));
 }
@@ -846,6 +1236,8 @@ applyDisguise();
 BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
+
+initPage();
 </script>
 </body>
 </html>
