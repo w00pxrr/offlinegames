@@ -57,6 +57,7 @@ transition: .5s;
 /*Override max width of body set in new.css*/
 body {
 max-width: 1200px;
+margin: 0 auto;
 padding: 24px 18px 56px;
 background:
 radial-gradient(circle at 12% 6%, rgba(24, 144, 255, 0.2), transparent 34%),
@@ -253,6 +254,7 @@ display: grid;
 grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
 gap: 16px;
 align-items: stretch;
+justify-content: center;
 }
 
 #container {
@@ -260,6 +262,7 @@ display: grid;
 grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
 gap: 16px;
 align-items: stretch;
+justify-content: center;
 }
 
 #contain > #container {
@@ -461,11 +464,13 @@ width: 100%;
 #container {
 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 gap: 12px;
+justify-content: center;
 }
 
 #contain {
 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 gap: 12px;
+justify-content: center;
 }
 }
 </style>
