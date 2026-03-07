@@ -1068,7 +1068,7 @@ return tile;
 
 // Opens a game using the currently selected launch mode.
 function handleTileOpen(tile) {
-var href = tile.getAttribute('data-href');
+var href = new URL(tile.getAttribute('data-href'), window.location.href).href;
 var name = tile.getAttribute('data-name');
 var modeX = tile.getAttribute('data-modex');
 var pic = new URL(tile.getAttribute('data-pic'), window.location.href).href;
