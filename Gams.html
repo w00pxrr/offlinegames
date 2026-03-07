@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
 <link rel="stylesheet" href="assets/new.min.css">
@@ -137,6 +138,27 @@ cursor: pointer;
 background: var(--nc-bg-3);
 }
 
+.favorite-btn {
+position: absolute;
+top: 8px;
+right: 8px;
+width: 28px;
+height: 28px;
+border-radius: 50%;
+border: 1px solid var(--nc-tx-1);
+background: var(--nc-bg-1);
+color: var(--nc-tx-1);
+font-size: 14pt;
+line-height: 1;
+cursor: pointer;
+padding: 0;
+z-index: 2;
+}
+
+.favorite-btn:hover {
+background: var(--nc-bg-3);
+}
+
 .shade {
 opacity: 0.7;
 background-color: var(--nc-bg-3);
@@ -183,17 +205,16 @@ transform: translateX(-50%) translateY(-50%);
 100%{transform:rotate(360deg)}
 }
 </style>
-<script src='i.js'></script>
 </head>
 
 <body onload="setSavedTheme()">
-<header>
+<div>
 <h1 class="title">Gams - Forked by w00pxrr</h1>
-</header>
+</div>
 
 <label>Dark Mode:</label>
 <label class="switch">
-<input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
+<input id="darkModeInput" type="checkbox" checked onchange="changeTheme(this)">
 <span class="slider round"></span>
 </label>
 
@@ -213,10 +234,8 @@ transform: translateX(-50%) translateY(-50%);
 <div class="overlay" id="overlay" style="display:none">
 <div class="shade" id="shade"></div>
 <div class="cont" id="cont">
-<a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">
-<button>🡽</button>
-</a>
-<iframe style="width:100%;height:100%;border-radius:10px" frameborder=0 id="mainGam"></iframe>
+<a style="position:fixed;top:-35px;left:-35px;" id="newWin" title="Open in new window" target="_blank">&#8599;</a>
+<iframe style="width:100%;height:100%;border-radius:10px" frameborder="0" id="mainGam"></iframe>
 
 <div class='loader' id='loader'></div>
 </div>
@@ -226,13 +245,13 @@ transform: translateX(-50%) translateY(-50%);
 <div id="contain">
 
 
-<a href="Settings.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">Settings</p></a>
-<a href="g/about.html" class="tile"><img class="img" src="img/gams-g.png"><p class="name">About</p></a>
+<a href="Settings.html" class="tile"><img alt="settings" class="img" src="img/gams-g.png"><span class="name">Settings</span></a>
+<a href="g/about.html" class="tile"><img alt="about" class="img" src="img/gams-g.png"><span class="name">About</span></a>
 
 </div>
 
 <div id="searcher">
-<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-2);" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div>
+<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:18pt; transition: all 0.3s ease-in-out; text-align:center;">&#128269;</div>
 </div>
 
 <script>
@@ -277,7 +296,7 @@ document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
 
 function searchbar(elm) {
 elm.remove()
-l('searcher').innerHTML += `<input id="searchQuery" type="search" onload="startSearch()" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.5s ease-in-out;" onblur="searchicon(this)" onfocus="this.style.width = '120px'">`;
+l('searcher').innerHTML += `<input id="searchQuery" type="search" onkeyup="startSearch()" placeholder="Search..." autocomplete="off" style="position:fixed; width: 20px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.5s ease-in-out;" onblur="searchicon(this)" onfocus="this.style.width = '120px'">`;
 l('searchQuery').focus();
 l('searchQuery').style.width = '120px';
 }
@@ -286,14 +305,14 @@ function searchicon(elm) {
 elm.style.width = '20px';
 setTimeout(function(){
 elm.remove();
-l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:13pt; transition: all 0.3s ease-in-out;"><svg style="max-width: 100%; fill: var(--nc-tx-2);" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg></div>`;
+l('searcher').innerHTML += `<div onclick="searchbar(this)" style="position:fixed; width: 50px; right: 10px; top: 10px; z-index: 100; font-size:18pt; transition: all 0.3s ease-in-out; text-align:center;">&#128269;<\/div>`;
 }, 500);
 }
 
 function getStoredJSON(key, data) {
-if (data && data.key && (localStorage[key] != 'null')) {
+if (data && data.key && (localStorage[key] !== 'null')) {
 var inStore = JSON.parse(localStorage[key]);
-if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+if ((typeof inStore === 'object') && inStore.hasOwnProperty(data.key)) {
 return inStore[data.key];
 }
 }
@@ -379,11 +398,10 @@ l("newWin").href = '';
 }
 
 function startSearch() {
-var input, filter, ul, li, a, i;
+var input, filter, li, i;
 input = l("searchQuery");
 filter = input.value.toUpperCase();
-ul = document.body;
-li = ul.getElementsByClassName("tile");
+li = document.body.getElementsByClassName("tile");
 for (i = 0; i < li.length; i++) {
 if (li[i].textContent.toUpperCase().indexOf(filter) > -1) {
 li[i].style.display = "";
@@ -500,108 +518,170 @@ var gamsList = [
  {name: "Proxy Browser", href: "g/proxybrowser.html", src: "proxybrowser.webp"},
 ];
 
-var container = createElement('div', {
-id: 'container'
-})
-var listFragment = document.createDocumentFragment();
+function setCookie(name, value, days) {
+var expires = "";
+if (days) {
+var date = new Date();
+date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+expires = "; expires=" + date.toUTCString();
+}
+var secure = window.location.protocol === "https:" ? "; Secure" : "";
+document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/; SameSite=Lax" + secure;
+}
 
+function getCookie(name) {
+var nameEQ = name + "=";
+var cookies = document.cookie.split(';');
+for (var i = 0; i < cookies.length; i++) {
+var c = cookies[i];
+while (c.charAt(0) === ' ') {c = c.substring(1, c.length);}
+if (c.indexOf(nameEQ) === 0) {return decodeURIComponent(c.substring(nameEQ.length, c.length));}
+}
+return null;
+}
+
+function getFavoriteIds() {
+var raw = getCookie('gams_favorites');
+if (!raw) {return [];}
+try {
+var parsed = JSON.parse(raw);
+if (Array.isArray(parsed)) {return parsed;}
+} catch (e) {}
+return [];
+}
+
+function saveFavoriteIds(ids) {
+setCookie('gams_favorites', JSON.stringify(ids), 3650);
+}
+
+function isFavorite(gameId) {
+var ids = getFavoriteIds();
+return ids.indexOf(gameId) !== -1;
+}
+
+function toggleFavorite(gameId) {
+var ids = getFavoriteIds();
+var idx = ids.indexOf(gameId);
+if (idx === -1) {
+ids.push(gameId);
+} else {
+ids.splice(idx, 1);
+}
+saveFavoriteIds(ids);
+renderGames();
+}
+
+var sectionOrder = [];
+var gamesData = [];
 var currentSection = undefined;
-for (var j = 0; j < gamsList.length; j++){
+
+for (var j = 0; j < gamsList.length; j++) {
 var gam = gamsList[j];
+if (gam.title) {
+currentSection = gam.title;
+sectionOrder.push(gam.title);
+continue;
+}
+if (!gam.name) {continue;}
 
-if (gam.title) {currentSection = gam.title}
-
-if(gam.name){
-totalGames += 1;
-var tile = createElement('div', {
-class : 'tile'
-});
 var imgName = gam.name.toLowerCase().replace(/\s/g, '');
-var imgSrc = gam.img || ('img/' + imgName + '.png');
+var gameId = gam.id || imgName;
+gamesData.push({
+id: gameId,
+name: gam.name,
+href: gam.href || ('g/' + imgName + '.html'),
+img: gam.img || (gam.src ? ('img/' + gam.src) : ('img/' + imgName + '.png')),
+type: gam.type || "",
+section: currentSection || "Other",
+index: gamesData.length
+});
+}
+
+totalGames = gamesData.length;
+l('totalGames').innerText = totalGames;
+
+var container = createElement('div', {id: 'container'});
+l('contain').appendChild(container);
+
+function makeSectionTitle(titleText) {
+var title = createElement('h2', {
+style: "float:left;width:100%"
+});
+title.textContent = titleText;
+return title;
+}
+
+function makeTile(game) {
+var tile = createElement('div', {
+class: 'tile',
+'data-game-id': game.id,
+'data-href': game.href,
+'data-name': game.name,
+'data-modex': game.type,
+'data-pic': game.img
+});
+
+var favoriteButton = createElement('button', {
+class: 'favorite-btn',
+type: 'button',
+title: 'Toggle favorite',
+'aria-label': 'Toggle favorite'
+});
+favoriteButton.textContent = isFavorite(game.id) ? "\u2605" : "\u2606";
+favoriteButton.onclick = function(e) {
+e.preventDefault();
+e.stopPropagation();
+toggleFavorite(game.id);
+};
+tile.appendChild(favoriteButton);
+
 var img = createElement('img', {
-class : 'img',
-src : imgSrc
+class: 'img',
+src: game.img,
+alt: game.name
 });
 tile.appendChild(img);
 
 var p = createElement('p', {
-class : 'name'
+class: 'name'
 });
-p.textContent = gam.name;
+p.textContent = game.name;
 tile.appendChild(p);
 
-if (currentSection) {
-var section = createElement('span', {
-style: "display:none"
-});
-section.textContent = currentSection;
-tile.appendChild(section);
+return tile;
 }
 
-var modeX = createElement('span', {
-class: "modeX",
-style: "display:none"
-});
-modeX.textContent = gam.type;
-tile.appendChild(modeX);
+function handleTileOpen(tile) {
+var href = tile.getAttribute('data-href');
+var name = tile.getAttribute('data-name');
+var modeX = tile.getAttribute('data-modex');
+var pic = new URL(tile.getAttribute('data-pic'), window.location.href).href;
+var mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
 
-var aHref = gam.href || ('g/' + imgName + '.html');
-var a = createElement('a', {
-class : 'href',
-href : aHref
-});
-tile.appendChild(a);
-listFragment.appendChild(tile);
-}else if (gam.title){
-var title = createElement('h2', {
-style: "float:left;width:100%"
-});
-listFragment.appendChild(createElement('br'));
-title.textContent = gam.title;
-listFragment.appendChild(title);
-listFragment.appendChild(createElement('br'));
-}
-}
-container.appendChild(listFragment);
-l('contain').appendChild(container);
-l('totalGames').innerText = totalGames;
+if (modeX === "raw") {mode = modeX;}
 
-var mode = 'gam'; //embed, gam, blank, direct
-//Init
-var gams = document.getElementsByClassName("tile");
-for (var i = 0; i < gams.length; i++){
-gams[i].onclick = function(e){
-var href = (this.getElementsByClassName("href")[0].href);
-var name = (this.getElementsByClassName("name")[0].innerText);
-var modeX = (this.getElementsByClassName("modeX")[0].innerText);
-var pic = (this.getElementsByClassName("img")[0].src);
-
-mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
-
-if (modeX == "raw") {mode = modeX}
-
-if (mode == 'raw') {
+if (mode === 'raw') {
 window.open(href);
 }
 
-if (mode == 'direct') {
+if (mode === 'direct') {
 window.location = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
 }
 
-if (mode == 'blank') {
-var w = window.open();
-var doc = w.document;
+if (mode === 'blank') {
+ const w = window.open();
+ const doc = w.document;
 
-var body = doc.body;
-body.style = "margin:0";
-var iframe = w.document.createElement('iframe');
-iframe.style = "width:100vw;height:100vh";
-iframe.setAttribute('frameborder', 0);
+ const body = doc.body;
+ body.style = "margin:0";
+ const iframe = w.document.createElement('iframe');
+ iframe.style = "width:100vw;height:100vh";
+iframe.setAttribute('frameborder', "0");
 iframe.src = `g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`;
 body.appendChild(iframe);
 
-var script = w.document.createElement('script');
-script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+ const script = w.document.createElement('script');
+ script.innerHTML = `const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
 
 function setFavicon(href) {
 var existFav = document.querySelectorAll('link[rel*="icon"]');
@@ -617,9 +697,9 @@ document.getElementsByTagName('head')[0].appendChild(link);
 }
 
 function getStoredJSON(key, data) {
-if (data && data.key && (localStorage[key] != 'null')) {
+if (data && data.key && (localStorage[key] !== 'null')) {
 var inStore = JSON.parse(localStorage[key]);
-if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+if ((typeof inStore === 'object') && inStore.hasOwnProperty(data.key)) {
 return inStore[data.key];
 }
 }
@@ -654,11 +734,11 @@ applyDisguise();
 doc.head.appendChild(script);
 }
 
-if (mode == 'gam') {
+if (mode === 'gam') {
 window.open(`g/g/Gam.html?icon=${pic}&name=${name}&src=${href}`);
 }
 
-if (mode == 'embed') {
+if (mode === 'embed') {
 l('overlay').style.display = 'block';
 l("mainGam").src = href;
 l("newWin").href = href;
@@ -672,10 +752,62 @@ l("mainGam").focus();
 }, 100);
 }
 }
+}
 
+function renderGames() {
+container.innerHTML = "";
+var fragment = document.createDocumentFragment();
+var favoriteIds = getFavoriteIds();
+var favoriteMap = {};
+for (var i = 0; i < favoriteIds.length; i++) {
+favoriteMap[favoriteIds[i]] = true;
+}
+
+var favoriteGames = [];
+for (var k = 0; k < gamesData.length; k++) {
+if (favoriteMap[gamesData[k].id]) {favoriteGames.push(gamesData[k]);}
+}
+favoriteGames.sort(function(a, b) { return a.index - b.index; });
+
+if (favoriteGames.length > 0) {
+fragment.appendChild(createElement('br'));
+fragment.appendChild(makeSectionTitle('Favorites'));
+fragment.appendChild(createElement('br'));
+for (var f = 0; f < favoriteGames.length; f++) {
+fragment.appendChild(makeTile(favoriteGames[f]));
 }
 }
-//Init
+
+for (var s = 0; s < sectionOrder.length; s++) {
+var sectionName = sectionOrder[s];
+var sectionGames = [];
+for (var g = 0; g < gamesData.length; g++) {
+if (gamesData[g].section === sectionName && !favoriteMap[gamesData[g].id]) {
+sectionGames.push(gamesData[g]);
+}
+}
+if (sectionGames.length === 0) {continue;}
+
+fragment.appendChild(createElement('br'));
+fragment.appendChild(makeSectionTitle(sectionName));
+fragment.appendChild(createElement('br'));
+for (var t = 0; t < sectionGames.length; t++) {
+fragment.appendChild(makeTile(sectionGames[t]));
+}
+}
+
+container.appendChild(fragment);
+
+var tiles = container.getElementsByClassName('tile');
+for (var n = 0; n < tiles.length; n++) {
+tiles[n].onclick = function(e) {
+if (e.target && e.target.classList && e.target.classList.contains('favorite-btn')) {return;}
+handleTileOpen(this);
+}
+}
+}
+
+renderGames();
 
 function setFavicon(href) {
 var existFav = document.querySelectorAll('link[rel*="icon"]');
