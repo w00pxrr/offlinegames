@@ -31,13 +31,16 @@
   <meta name="language" content="English">
   <meta name="revisit-after" content="5 days days">
   <meta name="author" content="Parker Solomon">
-<script>window.addEventListener('online', () => {
-    alert("You are online; you should turn off wifi or change tab name in settings to not get caught; to play more games go onto the github repo and download some of the swfs to play in ruffle");
-});
-
-window.addEventListener('offline', () => {
-    alert('Go to the g/flash folder to find more games');
-});   </script>
+<script type="application/javascript">
+function getIP(json) {
+  const blockedIPs = [" 68.189.72.79"];
+  if (blockedIPs.includes(json.ip)) {
+    alert("Access denied. You are blocked.");
+    window.location = "chrome://newtab";
+  }
+}
+</script>
+<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>   
 <style>
 html, body {
 transition: .5s;
@@ -203,7 +206,7 @@ transform: translateX(-50%) translateY(-50%);
 <span class="slider round"></span>
 </label>
 
-<br><br>
+
 
 <p>Total Games: <span id="totalGames">Loading...</span></p>
 
