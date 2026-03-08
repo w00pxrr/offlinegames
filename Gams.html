@@ -796,34 +796,39 @@ var gamModeSelect = l('gamMode');
 if (gamModeSelect && getStoredJSON('gams', {key: 'gamMode'})) {gamModeSelect.value = getStoredJSON('gams', {key: 'gamMode'})}
 //Set gam Mode
 
-if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
-var theme = getStoredJSON('gams', {key: 'theme'});
-if (theme === 'light') {
+var savedTheme = getStoredJSON('gams', {key: 'theme'});
+if (savedTheme) {
+if (savedTheme === 'light') {
 //eww you monster
 setLight();
 darkModeInput.checked = false;
-} else if (theme === 'dark') {
+} else if (savedTheme === 'dark') {
 setDark();
 darkModeInput.checked = true;
 }
 } else {
 var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 if (media) {
+var applyAutoTheme = function(isDark) {
+darkModeInput.checked = isDark;
+if (isDark) {
+setDark();
+} else {
+setLight();
+}
+};
 var onThemePrefChange = function(event) {
-var newColorScheme = event.matches ? "dark" : "light";
-if (newColorScheme === 'dark') {
-darkModeInput.checked = true;
-}
-if (newColorScheme === 'light') {
-darkModeInput.checked = false;
-}
+applyAutoTheme(event.matches);
 };
 if (typeof media.addEventListener === 'function') {
 media.addEventListener('change', onThemePrefChange);
 } else if (typeof media.addListener === 'function') {
 media.addListener(onThemePrefChange);
 }
-darkModeInput.checked = media.matches;
+applyAutoTheme(media.matches);
+} else {
+setLight();
+darkModeInput.checked = false;
 }
 }
 }
