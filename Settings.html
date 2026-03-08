@@ -84,79 +84,24 @@ letter-spacing: 3pt;
 font-family: 'facon', sans-serif;
 }
 
-.tile {
-  color: var(--nc-tx-1);
-  height: auto;
-  width: auto;
-  border-radius: 10px;
-  border: 1px solid var(--nc-tx-1);
-  text-align: center;
-  position: relative;
-  float: left;
-  margin: 20px;
+.cookie-settings {
+  margin-top: 6px;
 }
 
-.tile img {
-  width: 200px;
-  height: 200px;
-  border-radius: 10px;
+.cookie-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0;
 }
 
-.tile:hover {
-  font-weight: bold;
-  cursor: pointer;
-  background: var(--nc-bg-3);
-}
-
-.shade {
- opacity: 0.7;
- background-color: var(--nc-bg-3);
- position: fixed;
- width: 100%;
- height: 100vh;
- top: 0px;
- left: 0px;
- z-index: 100;
- display: block;
-}
-
-.cont {
- opacity: 1;
- color: var(--nc-tx-1);
- background-color: var(--nc-bg-3);
- z-index: 1000;
- width: calc(100vw - 70px);
- height: calc(100vh - 70px);
- border-radius: 10px;
- text-align: center;
- position: fixed;
- left: 50%;
- top: 50%;
- transform: translateX(-50%) translateY(-50%);
-}
-
-.loader{
-position: fixed;
-border:16px solid var(--nc-bg-3);
-border-radius:50%;
-border-top:16px solid var(--nc-lk-2);
-width:120px;
-height:120px;
-top: 0;
-right: 0;
-margin: 10px;
-animation:spin 2s linear infinite;
-transform: translateX(-50%) translateY(-50%);
-}
-
-@keyframes spin{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
+#cookieStatus {
+  margin-top: 8px;
 }
 </style>
 <script src='i.js'></script>
 </head>
-<body onload="setSavedTheme()">
+<body onload="setSavedTheme(); initCookieSettings();">
 <header>
 <h1 class="title">Gams - Settings</h1>
 </header>
@@ -191,6 +136,18 @@ transform: translateX(-50%) translateY(-50%);
 
 <br><hr><br>
 
+<h2>Cookie Preferences:</h2>
+<blockquote><i>Control analytics and settings cookies for Gams.</i></blockquote>
+<div class="cookie-settings">
+  <label class="cookie-line"><input id="consentSettingsToggle" type="checkbox"> Settings cookies (favorites/preferences)</label>
+  <label class="cookie-line"><input id="consentAnalyticsToggle" type="checkbox"> Analytics cookies (Umami)</label>
+  <button onclick="saveCookieSettings()">Save Cookie Preferences</button>
+  <button onclick="resetCookieConsent()">Reset Consent</button>
+  <p id="cookieStatus"><small>Not saved yet.</small></p>
+</div>
+
+<br><hr><br>
+
 <h2>Disguise:</h2>
 <blockquote><i>This allows you to disguise this site as a different site.</i></blockquote>
 <label>Tab Name:</label>
@@ -215,7 +172,10 @@ transform: translateX(-50%) translateY(-50%);
 <a href="Gams.html"><small class="facon">Gams</small></a>
 
 <script>
-const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+const BroadcastDisguise = (typeof BroadcastChannel !== 'undefined')
+  ? new BroadcastChannel('BroadcastDisguise')
+  : null;
+const COOKIE_CONSENT_KEY = 'gams_cookie_consent_v1';
 
 function l(e) {
   return document.getElementById(e);
@@ -248,25 +208,39 @@ document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
 }
 
 function getStoredJSON(key, data) {
- if (data && data.key && (localStorage[key] != 'null')) {
-  var inStore = JSON.parse(localStorage[key]);
-  if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+ if (data && data.key && (localStorage[key] !== 'null')) {
+  var inStore;
+  try {
+   inStore = JSON.parse(localStorage[key]);
+  } catch (_e) {
+   return null;
+  }
+  if ((typeof inStore === 'object') && Object.prototype.hasOwnProperty.call(inStore, data.key)) {
    return inStore[data.key];
   }
  }
  if (localStorage[key] && !data) {
-  return JSON.parse(localStorage[key]);
+  try {
+   return JSON.parse(localStorage[key]);
+  } catch (_e) {
+   return null;
+  }
  }
  return null;
 }
 
 function storeJSON(key, data) {
+ var inStore;
  if (localStorage[key]) {
-  var inStore = JSON.parse(localStorage[key]) || {};
+  try {
+   inStore = JSON.parse(localStorage[key]) || {};
+  } catch (_e) {
+   inStore = {};
+  }
   inStore[data.key] = data.value;
   localStorage[key] = JSON.stringify(inStore);
  }else{
-  var inStore = {};
+  inStore = {};
   inStore[data.key] = data.value;
   localStorage[key] = JSON.stringify(inStore);
  }
@@ -276,8 +250,13 @@ function storeJSON(key, data) {
 
 function removeJSON(key, data) {
  if (localStorage[key]) {
-  var inStore = JSON.parse(localStorage[key]) || {};
-   if (inStore.hasOwnProperty(data.key)) {
+  var inStore;
+  try {
+   inStore = JSON.parse(localStorage[key]) || {};
+  } catch (_e) {
+   inStore = {};
+  }
+   if (Object.prototype.hasOwnProperty.call(inStore, data.key)) {
     delete inStore[data.key];
    }
   localStorage[key] = JSON.stringify(inStore);
@@ -316,6 +295,70 @@ function changePopoutMode(input) {
  });
 }
 
+function getCookieConsent() {
+  var raw = localStorage.getItem(COOKIE_CONSENT_KEY);
+  if (!raw) {return null;}
+  try {
+    var parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {return parsed;}
+  } catch (_e) {}
+  return null;
+}
+
+function setCookieConsent(consent) {
+  localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
+}
+
+function clearCookie(name) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax';
+}
+
+function setCookieStatus(text) {
+  var status = l('cookieStatus');
+  if (!status) {return;}
+  status.innerHTML = '<small>' + text + '</small>';
+}
+
+function initCookieSettings() {
+  var settingsToggle = l('consentSettingsToggle');
+  var analyticsToggle = l('consentAnalyticsToggle');
+  if (!settingsToggle || !analyticsToggle) {return;}
+
+  var consent = getCookieConsent();
+  if (consent) {
+    settingsToggle.checked = consent.settings === true;
+    analyticsToggle.checked = consent.analytics === true;
+    setCookieStatus('Current choice loaded.');
+  } else {
+    settingsToggle.checked = true;
+    analyticsToggle.checked = false;
+    setCookieStatus('No saved choice yet. Pick your preferences and save.');
+  }
+}
+
+function saveCookieSettings() {
+  var settingsToggle = l('consentSettingsToggle');
+  var analyticsToggle = l('consentAnalyticsToggle');
+  if (!settingsToggle || !analyticsToggle) {return;}
+
+  var consent = {
+    settings: settingsToggle.checked,
+    analytics: analyticsToggle.checked
+  };
+  setCookieConsent(consent);
+  if (!consent.settings) {
+    clearCookie('gams_favorites');
+  }
+  setCookieStatus('Saved. New preferences will apply across Gams pages.');
+}
+
+function resetCookieConsent() {
+  localStorage.removeItem(COOKIE_CONSENT_KEY);
+  clearCookie('gams_favorites');
+  initCookieSettings();
+  setCookieStatus('Consent reset. The popup will show again on Gams.');
+}
+
 function setSavedTheme() {
 //Set Gam Mode
 if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
@@ -323,11 +366,11 @@ if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode')
 
     if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
         var theme = getStoredJSON('gams', {key: 'theme'});
-        if (theme == 'light') {
+        if (theme === 'light') {
             //eww you monster
             setLight();
             l('darkModeInput').checked = false;
-        } else if (theme == 'dark') {
+        } else if (theme === 'dark') {
             setDark();
             l('darkModeInput').checked = true;
         }
@@ -335,11 +378,11 @@ if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode')
 
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
             var newColorScheme = event.matches ? "dark" : "light";
-            if (newColorScheme == 'dark') {
-                l('darkModeInput').checked = true
+            if (newColorScheme === 'dark') {
+                l('darkModeInput').checked = true;
             }
-            if (newColorScheme == 'light') {
-                l('darkModeInput').checked = false
+            if (newColorScheme === 'light') {
+                l('darkModeInput').checked = false;
             }
         });
 
@@ -359,13 +402,13 @@ function fileToData(file, callback) {
  reader.readAsDataURL(file);
 }
 
-function diment(e,t,n) {
+function fitDimensions(e, t, n) {
 var o = e.width;
 var c = e.height;
 
 o>c?o>t&&(c=Math.round(c*t/o),o=t):c>n&&(o=Math.round(o*n/c),c=n);
 
-return[o,c]
+return[o,c];
 }
   
  function handleFileSelect(file){
@@ -375,23 +418,26 @@ return[o,c]
     img.src = blob;
     
     img.onload = function(){
-     var dimentions = (diment(img, 30, 30));
+     var dimensions = fitDimensions(img, 30, 30);
      var canvas = document.createElement("canvas");
-     var wdth = dimentions[0];
-     var heit = dimentions[1];
+     var wdth = dimensions[0];
+     var heit = dimensions[1];
      
      canvas.width = wdth;
      canvas.height = heit;
      var ctx = canvas.getContext("2d");
      ctx.drawImage(img, 0, 0, wdth, heit);
      canvas.toBlob(function(e) {
+      if (!e) {return;}
       fileToData(e, function(data){
        storeJSON('gams', {
          key: 'icon',
          value: data
         });
         applyDisguise();
-        BroadcastDisguise.postMessage('update');
+        if (BroadcastDisguise) {
+         BroadcastDisguise.postMessage('update');
+        }
       });
      }, "image/png", 0);
   }
@@ -404,17 +450,19 @@ function applyTitle() {
    key: 'title',
    value: input.value
   });
-  BroadcastDisguise.postMessage('update');
+  if (BroadcastDisguise) {
+   BroadcastDisguise.postMessage('update');
+  }
   applyDisguise();
  }else{
-  alert("Choose a title.")
+  alert("Choose a title.");
  }
 }
  
 function applyIcon() {
  var input = l('tabIcon');
  if (input.files && input.files.length >= 1) {
-  handleFileSelect(input.files[0])
+  handleFileSelect(input.files[0]);
  }else{
   alert("Upload a file.");
  }
@@ -423,7 +471,9 @@ function applyIcon() {
 function removeDisguise() {
  removeJSON('gams', {key: 'icon'});
  removeJSON('gams', {key: 'title'});
- BroadcastDisguise.postMessage('update');
+ if (BroadcastDisguise) {
+  BroadcastDisguise.postMessage('update');
+ }
  applyDisguise();
 }
 
@@ -465,14 +515,18 @@ function presetDisguise(img, title) {
 storeJSON('gams', {key: 'icon', value: img.src});
 storeJSON('gams', {key: 'title', value: title});
 
+if (BroadcastDisguise) {
 BroadcastDisguise.postMessage('update');
+}
 
 applyDisguise();
 }
 
+if (BroadcastDisguise) {
 BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
+}
 </script>
 </body>
 </html>

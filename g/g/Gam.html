@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <title>Gam</title>
@@ -88,6 +88,50 @@ fill: var(--fill-hover);
 }
 
 } 
+
+.mobile-dpad {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 120;
+  display: none;
+  grid-template-columns: repeat(3, 54px);
+  grid-template-rows: repeat(3, 54px);
+  gap: 8px;
+  touch-action: none;
+  user-select: none;
+}
+
+.arrow-btn {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: color-mix(in srgb, var(--bg-2) 82%, var(--bg) 18%);
+  color: var(--tx);
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.arrow-btn:active,
+.arrow-btn.pressed {
+  transform: scale(0.96);
+  background: color-mix(in srgb, var(--fill-hover) 20%, var(--bg-2) 80%);
+}
+
+.arrow-up { grid-column: 2; grid-row: 1; }
+.arrow-left { grid-column: 1; grid-row: 2; }
+.arrow-down { grid-column: 2; grid-row: 2; }
+.arrow-right { grid-column: 3; grid-row: 2; }
+
+@media (hover: none) and (pointer: coarse), (max-width: 900px) {
+  .mobile-dpad {
+    display: grid;
+  }
+}
 </style>
 </head>
 <body>
@@ -168,25 +212,39 @@ fill: var(--fill-hover);
   </script>
   <script>
 function getStoredJSON(key, data) {
- if (data && data.key && (localStorage[key] != 'null')) {
-  var inStore = JSON.parse(localStorage[key]);
-  if ((typeof inStore == 'object') && inStore.hasOwnProperty(data.key)) {
+ if (data && data.key && (localStorage[key] !== 'null')) {
+  var inStore;
+  try {
+   inStore = JSON.parse(localStorage[key]);
+  } catch (_e) {
+   return null;
+  }
+  if ((typeof inStore === 'object') && Object.prototype.hasOwnProperty.call(inStore, data.key)) {
    return inStore[data.key];
   }
  }
  if (localStorage[key] && !data) {
-  return JSON.parse(localStorage[key]);
+  try {
+   return JSON.parse(localStorage[key]);
+  } catch (_e) {
+   return null;
+  }
  }
  return null;
 }
 
 function storeJSON(key, data) {
+ var inStore;
  if (localStorage[key]) {
-  var inStore = JSON.parse(localStorage[key]) || {};
+  try {
+   inStore = JSON.parse(localStorage[key]) || {};
+  } catch (_e) {
+   inStore = {};
+  }
   inStore[data.key] = data.value;
   localStorage[key] = JSON.stringify(inStore);
  }else{
-  var inStore = {};
+  inStore = {};
   inStore[data.key] = data.value;
   localStorage[key] = JSON.stringify(inStore);
  }
@@ -194,7 +252,6 @@ function storeJSON(key, data) {
  return localStorage[key];
 }
   </script>
-  <script src='i.js'></script>
 <script>
 var infoMenuDisplay = "top"; //top, bottom, left, right
 
@@ -208,20 +265,20 @@ var awayFromSide2 = "bottom";
 var translateSide = "translateX";
 var popOutDistance = "162px";
 
-if (infoMenuDisplay == "top") {
+if (infoMenuDisplay === "top") {
  awayFromSide1 = "left";
  awayFromSide2 = "bottom";
  translateSide = "translateX";
-}else if (infoMenuDisplay == "bottom") {
+}else if (infoMenuDisplay === "bottom") {
  awayFromSide1 = "left";
  awayFromSide2 = "top";
  translateSide = "translateX";
-}else if (infoMenuDisplay == "left") {
+}else if (infoMenuDisplay === "left") {
  awayFromSide1 = "top";
  awayFromSide2 = "right";
  translateSide = "translateY";
  popOutDistance = "422px";
-}else if (infoMenuDisplay == "right") {
+}else if (infoMenuDisplay === "right") {
  awayFromSide1 = "top";
  awayFromSide2 = "left";
  translateSide = "translateY";
@@ -250,12 +307,12 @@ var style = `
 `;
 
 var styleElm = document.createElement('style');
-styleElm.innerHTML = style;
+styleElm.textContent = style;
 document.body.appendChild(styleElm);
 </script>
 <div class="info-menu">
 
-<img id="icon-img" style="width:50px;height:50px;border-radius:10px;" src="" ondblclick="Function(prompt())()">
+<img id="icon-img" style="width:50px;height:50px;border-radius:10px;" src="" alt="Game icon">
 <header style="overflow: scroll; height: 80px; width: 340px; float: right; margin-left: 10px;">
 <h1 id="name">---</h1>
 </header>
@@ -265,18 +322,26 @@ document.body.appendChild(styleElm);
 </a>
 
 <div class="svg" title="Fullscreen" onclick="openFullscreen('frame')">
-<svg viewBox="0 0 385 385"><path d="M385 12a12 12 0 0 0-12-12H264.8c-6.9 0-12 5.4-12 12.2s5.1 11.9 12 11.9h96l-.2 96.5c0 6.8 5.2 12 12 12 6.9 0 12-5.2 12-12l.3-108.4V12zM120.5 0H12.2a12 12 0 0 0-12 12L0 120.4c0 6.8 5.4 12 12.2 12s11.9-5.2 11.9-12l.2-96.3h96.2c6.8 0 12-5.2 12-12 0-6.9-5.2-12.1-12-12.1zm-.4 361h-96v-96.3c0-6.9-5.2-12-12-12S0 257.7 0 264.6v108.3a12 12 0 0 0 12 12h108.1c6.9 0 12-5.3 12-12.2 0-6.8-5.1-11.8-12-11.8zm252.7-108c-6.9 0-11.9 5-11.9 11.8V361h-96.2c-6.9 0-12 5.2-12 12s5.1 12 12 12h108.2a12 12 0 0 0 12-12V265c0-6.9-5.3-12-12.2-12z"></svg>
+<svg viewBox="0 0 385 385"><path d="M385 12a12 12 0 0 0-12-12H264.8c-6.9 0-12 5.4-12 12.2s5.1 11.9 12 11.9h96l-.2 96.5c0 6.8 5.2 12 12 12 6.9 0 12-5.2 12-12l.3-108.4V12zM120.5 0H12.2a12 12 0 0 0-12 12L0 120.4c0 6.8 5.4 12 12.2 12s11.9-5.2 11.9-12l.2-96.3h96.2c6.8 0 12-5.2 12-12 0-6.9-5.2-12.1-12-12.1zm-.4 361h-96v-96.3c0-6.9-5.2-12-12-12S0 257.7 0 264.6v108.3a12 12 0 0 0 12 12h108.1c6.9 0 12-5.3 12-12.2 0-6.8-5.1-11.8-12-11.8zm252.7-108c-6.9 0-11.9 5-11.9 11.8V361h-96.2c-6.9 0-12 5.2-12 12s5.1 12 12 12h108.2a12 12 0 0 0 12-12V265c0-6.9-5.3-12-12.2-12z"></path></svg>
 </div>
 
 <div class="svg" title="Settings" id="settingsButton">
-<svg viewBox="0 0 48 48"><path d="M38.86 25.95c.08-.64.14-1.29.14-1.95s-.06-1.31-.14-1.95l4.23-3.31c.38-.3.49-.84.24-1.28l-4-6.93c-.25-.43-.77-.61-1.22-.43l-4.98 2.01c-1.03-.79-2.16-1.46-3.38-1.97l-.75-5.3c-.09-.47-.5-.84-1-.84h-8c-.5 0-.91.37-.99.84l-.75 5.3c-1.22.51-2.35 1.17-3.38 1.97l-4.98-2.01c-.45-.17-.97 0-1.22.43l-4 6.93c-.25.43-.14.97.24 1.28l4.22 3.31c-.08.64-.14 1.29-.14 1.95s.06 1.31.14 1.95l-4.22 3.31c-.38.3-.49.84-.24 1.28l4 6.93c.25.43.77.61 1.22.43l4.98-2.01c1.03.79 2.16 1.46 3.38 1.97l.75 5.3c.08.47.49.84.99.84h8c.5 0 .91-.37.99-.84l.75-5.3c1.22-.51 2.35-1.17 3.38-1.97l4.98 2.01c.45.17.97 0 1.22-.43l4-6.93c.25-.43.14-.97-.24-1.28l-4.22-3.31zm-14.86 5.05c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></svg>
+<svg viewBox="0 0 48 48"><path d="M38.86 25.95c.08-.64.14-1.29.14-1.95s-.06-1.31-.14-1.95l4.23-3.31c.38-.3.49-.84.24-1.28l-4-6.93c-.25-.43-.77-.61-1.22-.43l-4.98 2.01c-1.03-.79-2.16-1.46-3.38-1.97l-.75-5.3c-.09-.47-.5-.84-1-.84h-8c-.5 0-.91.37-.99.84l-.75 5.3c-1.22.51-2.35 1.17-3.38 1.97l-4.98-2.01c-.45-.17-.97 0-1.22.43l-4 6.93c-.25.43-.14.97.24 1.28l4.22 3.31c-.08.64-.14 1.29-.14 1.95s.06 1.31.14 1.95l-4.22 3.31c-.38.3-.49.84-.24 1.28l4 6.93c.25.43.77.61 1.22.43l4.98-2.01c1.03.79 2.16 1.46 3.38 1.97l.75 5.3c.08.47.49.84.99.84h8c.5 0 .91-.37.99-.84l.75-5.3c1.22-.51 2.35-1.17 3.38-1.97l4.98 2.01c.45.17.97 0 1.22-.43l4-6.93c.25-.43.14-.97-.24-1.28l-4.22-3.31zm-14.86 5.05c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"></path></svg>
 </div>
 
 </div>
 
-<iframe src="" onload="this.focus();" id="frame" style="height:100vh;width:100vw" frameborder=0></iframe>
+<iframe src="" onload="this.focus();" id="frame" style="height:100vh;width:100vw;border:0" title="Game frame"></iframe>
+<div class="mobile-dpad" id="mobileDpad" aria-label="Mobile arrow controls">
+  <button class="arrow-btn arrow-up" type="button" data-key="ArrowUp" aria-label="Arrow Up">&#9650;</button>
+  <button class="arrow-btn arrow-left" type="button" data-key="ArrowLeft" aria-label="Arrow Left">&#9664;</button>
+  <button class="arrow-btn arrow-down" type="button" data-key="ArrowDown" aria-label="Arrow Down">&#9660;</button>
+  <button class="arrow-btn arrow-right" type="button" data-key="ArrowRight" aria-label="Arrow Right">&#9654;</button>
+</div>
 <script>
-const BroadcastDisguise = new BroadcastChannel('BroadcastDisguise');
+const BroadcastDisguise = (typeof BroadcastChannel !== 'undefined')
+  ? new BroadcastChannel('BroadcastDisguise')
+  : null;
 
 var settingsButton = document.getElementById('settingsButton');
 var modal = document.getElementById("myModal");
@@ -289,12 +354,22 @@ span.onclick = function() {
   modal.style.display = "none";
 }
 window.onclick = function(event) {
-  if (event.target == modal) {
+  if (event.target === modal) {
     modal.style.display = "none";
   }
 }
 
-function openFullscreen(e){document.getElementById(e).requestFullscreen?document.getElementById(e).requestFullscreen():document.getElementById(e).webkitRequestFullscreen?document.getElementById(e).webkitRequestFullscreen():document.getElementById(e).msRequestFullscreen&&document.getElementById(e).msRequestFullscreen()}
+function openFullscreen(elementId) {
+  var element = document.getElementById(elementId);
+  if (!element) {return;}
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+}
 
 
 function setFavicon(href) {
@@ -338,6 +413,66 @@ l("frame").focus();
 l("frame").src = src;
 l("frame").focus();
 
+function dispatchArrowEvent(target, eventType, keyValue) {
+  if (!target || typeof target.dispatchEvent !== 'function') {return;}
+  var event = new KeyboardEvent(eventType, {
+    key: keyValue,
+    code: keyValue,
+    which: keyValue === 'ArrowUp' ? 38 : keyValue === 'ArrowDown' ? 40 : keyValue === 'ArrowLeft' ? 37 : 39,
+    keyCode: keyValue === 'ArrowUp' ? 38 : keyValue === 'ArrowDown' ? 40 : keyValue === 'ArrowLeft' ? 37 : 39,
+    bubbles: true,
+    cancelable: true
+  });
+  target.dispatchEvent(event);
+}
+
+function sendArrowKey(eventType, keyValue) {
+  var frame = l('frame');
+  if (!frame) {return;}
+  frame.focus();
+  dispatchArrowEvent(window, eventType, keyValue);
+  try {
+    if (frame.contentWindow) {
+      frame.contentWindow.focus();
+      dispatchArrowEvent(frame.contentWindow, eventType, keyValue);
+      if (frame.contentWindow.document) {
+        dispatchArrowEvent(frame.contentWindow.document, eventType, keyValue);
+        if (frame.contentWindow.document.body) {
+          dispatchArrowEvent(frame.contentWindow.document.body, eventType, keyValue);
+        }
+      }
+    }
+  } catch (_e) {}
+}
+
+function bindArrowButton(button) {
+  if (!button) {return;}
+  var keyValue = button.getAttribute('data-key');
+  if (!keyValue) {return;}
+  var press = function(event) {
+    event.preventDefault();
+    button.classList.add('pressed');
+    sendArrowKey('keydown', keyValue);
+  };
+  var release = function(event) {
+    event.preventDefault();
+    button.classList.remove('pressed');
+    sendArrowKey('keyup', keyValue);
+  };
+  button.addEventListener('pointerdown', press);
+  button.addEventListener('pointerup', release);
+  button.addEventListener('pointercancel', release);
+  button.addEventListener('pointerleave', release);
+  button.addEventListener('touchstart', press, {passive: false});
+  button.addEventListener('touchend', release, {passive: false});
+  button.addEventListener('touchcancel', release, {passive: false});
+}
+
+var arrowButtons = document.querySelectorAll('#mobileDpad .arrow-btn');
+for (var i = 0; i < arrowButtons.length; i++) {
+  bindArrowButton(arrowButtons[i]);
+}
+
 const ogTitle = document.title;
 const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
 
@@ -360,9 +495,9 @@ document.documentElement.style.setProperty('--fill-hover', "white");
 function setSavedTheme() {
 if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
 var theme = getStoredJSON('gams', {key: 'theme'});
-if (theme == 'light') {
+if (theme === 'light') {
 setLight();
-} else if (theme == 'dark') {
+} else if (theme === 'dark') {
 setDark();
 }
 }
@@ -388,9 +523,11 @@ function applyDisguise() {
 
 applyDisguise();
 
+if (BroadcastDisguise) {
 BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
+}
 </script>
 </body>
 </html>

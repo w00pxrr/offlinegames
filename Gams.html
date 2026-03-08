@@ -6,7 +6,6 @@
 
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
- <script defer src="https://cloud.umami.is/script.js" data-website-id="ac0c3422-a178-4ef1-92f3-8d6f875896d0"></script>
   <!-- Primary Meta Tags -->
   <title>Gams</title>
   <meta name="title" content="Gams">
@@ -439,6 +438,54 @@ box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
 transition: all 0.5s ease-in-out;
 }
 
+.cookie-consent {
+position: fixed;
+left: 16px;
+right: 16px;
+bottom: 16px;
+z-index: 1200;
+padding: 14px;
+border-radius: 14px;
+border: 1px solid var(--gams-panel-border);
+background: color-mix(in srgb, var(--nc-bg-1) 92%, var(--nc-bg-2) 8%);
+box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.cookie-consent.hidden {
+display: none;
+}
+
+.cookie-title {
+margin: 0 0 6px;
+font-weight: 800;
+}
+
+.cookie-text {
+margin: 0 0 10px;
+font-size: 0.9rem;
+color: var(--nc-tx-2);
+}
+
+.cookie-options {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+margin-bottom: 10px;
+}
+
+.cookie-option {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+font-size: 0.92rem;
+}
+
+.cookie-actions {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+}
+
 @media (max-width: 760px) {
 body {
 padding: 16px 12px 40px;
@@ -467,6 +514,12 @@ justify-content: center;
 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 gap: 12px;
 justify-content: center;
+}
+
+.cookie-consent {
+left: 12px;
+right: 12px;
+bottom: 12px;
 }
 }
 </style>
@@ -545,6 +598,20 @@ justify-content: center;
 <div id="searcher">
 <button id="searchToggle" class="search-toggle button is-rounded is-light" type="button" aria-label="Open search">&#128269;</button>
 </div>
+
+<div id="cookieConsent" class="cookie-consent hidden" role="dialog" aria-label="Cookie preferences">
+<p class="cookie-title">Cookie Preferences</p>
+<p class="cookie-text">Choose whether to allow analytics cookies and settings cookies.</p>
+<div class="cookie-options">
+<label class="cookie-option"><input id="consentSettings" type="checkbox" checked>Settings cookies</label>
+<label class="cookie-option"><input id="consentAnalytics" type="checkbox">Analytics cookies</label>
+</div>
+<div class="cookie-actions">
+<button id="consentAcceptAll" class="button is-link is-small" type="button">Accept all</button>
+<button id="consentSave" class="button is-light is-small" type="button">Save choices</button>
+<button id="consentRejectAll" class="button is-small" type="button">Reject all</button>
+</div>
+</div>
 </div>
 </section>
 
@@ -559,6 +626,8 @@ try {
 const BroadcastDisguise = (typeof BroadcastChannel !== 'undefined')
 ? new BroadcastChannel('BroadcastDisguise')
 : null;
+var consentStorageKey = 'gams_cookie_consent_v1';
+var analyticsEnabled = false;
 
 // Short helper for id-based element lookup.
 function l(e) {
@@ -571,6 +640,7 @@ setSavedTheme();
 loadAnnouncement();
 bindSearchToggle();
 bindControls();
+bindCookieConsent();
 }
 
 // Wires the floating search button click/keyboard interactions.
@@ -642,6 +712,92 @@ var banner = l('announcementBanner');
 if (!banner) {return;}
 banner.classList.add('hidden');
 });
+}
+
+function loadCookieConsent() {
+var raw = localStorage.getItem(consentStorageKey);
+if (!raw) {return null;}
+try {
+var parsed = JSON.parse(raw);
+if (parsed && typeof parsed === 'object') {return parsed;}
+} catch (_e) {}
+return null;
+}
+
+function saveCookieConsent(consent) {
+localStorage.setItem(consentStorageKey, JSON.stringify(consent));
+}
+
+function hasSettingsCookieConsent() {
+var consent = loadCookieConsent();
+return !!(consent && consent.settings === true);
+}
+
+function clearCookie(name) {
+document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax';
+}
+
+function enableAnalytics() {
+if (analyticsEnabled) {return;}
+analyticsEnabled = true;
+var script = document.createElement('script');
+script.defer = true;
+script.src = 'https://cloud.umami.is/script.js';
+script.dataset.websiteId = 'ac0c3422-a178-4ef1-92f3-8d6f875896d0';
+document.head.appendChild(script);
+}
+
+function applyCookieConsent(consent) {
+if (!consent) {return;}
+if (consent.analytics) {
+enableAnalytics();
+}
+if (!consent.settings) {
+clearCookie('gams_favorites');
+}
+if (typeof renderGames === 'function') {
+renderGames();
+}
+}
+
+function bindCookieConsent() {
+var popup = l('cookieConsent');
+var settingsInput = l('consentSettings');
+var analyticsInput = l('consentAnalytics');
+var acceptAll = l('consentAcceptAll');
+var saveBtn = l('consentSave');
+var rejectAll = l('consentRejectAll');
+if (!popup || !settingsInput || !analyticsInput || !acceptAll || !saveBtn || !rejectAll) {return;}
+
+var saved = loadCookieConsent();
+if (saved) {
+applyCookieConsent(saved);
+popup.classList.add('hidden');
+return;
+}
+
+popup.classList.remove('hidden');
+
+acceptAll.onclick = function() {
+var consent = {settings: true, analytics: true};
+saveCookieConsent(consent);
+applyCookieConsent(consent);
+popup.classList.add('hidden');
+};
+
+saveBtn.onclick = function() {
+var consent = {settings: settingsInput.checked, analytics: analyticsInput.checked};
+saveCookieConsent(consent);
+applyCookieConsent(consent);
+popup.classList.add('hidden');
+};
+
+rejectAll.onclick = function() {
+var consent = {settings: false, analytics: false};
+saveCookieConsent(consent);
+applyCookieConsent(consent);
+popup.classList.add('hidden');
+};
 }
 
 // Applies the light color palette to theme variables.
@@ -970,6 +1126,7 @@ var gamsList = [
 
 // Persists a cookie value with expiration and security flags.
 function setCookie(name, value, days) {
+if (!hasSettingsCookieConsent()) {return;}
 var expires = "";
 if (days) {
 var date = new Date();
@@ -994,6 +1151,7 @@ return null;
 
 // Returns favorite game ids from cookie storage.
 function getFavoriteIds() {
+if (!hasSettingsCookieConsent()) {return [];}
 var raw = getCookie('gams_favorites');
 if (!raw) {return [];}
 try {
