@@ -552,6 +552,17 @@ animation: glassSheen 8.5s linear infinite;
 pointer-events: none;
 }
 
+.cont::after {
+z-index: 0;
+}
+
+#mainGam,
+#newWin,
+#loader {
+position: relative;
+z-index: 1;
+}
+
 .hero,
 .top-panel {
 animation: liquidBob 10s ease-in-out infinite;
