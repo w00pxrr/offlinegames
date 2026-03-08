@@ -551,7 +551,7 @@ bottom: 12px;
 <div class="select is-medium">
 <select id='gamMode' aria-label="Open game mode">
 <option value="gam">In new tab</option>
-<option value="embed">On this tab</option>
+<option value="embed" selected>On this tab</option>
 <option value="blank">In an about:blank tab</option>
 <option value="direct">Replace this tab</option>
 <option value="raw">Raw link in new tab</option>
@@ -949,7 +949,9 @@ var darkModeInput = l('darkModeInput');
 if (!darkModeInput) {return;}
 //Set Gam Mode
 var gamModeSelect = l('gamMode');
-if (gamModeSelect && getStoredJSON('gams', {key: 'gamMode'})) {gamModeSelect.value = getStoredJSON('gams', {key: 'gamMode'})}
+if (gamModeSelect) {
+gamModeSelect.value = getStoredJSON('gams', {key: 'gamMode'}) || 'embed';
+}
 //Set gam Mode
 
 var savedTheme = getStoredJSON('gams', {key: 'theme'});
@@ -1279,7 +1281,7 @@ var href = new URL(tile.getAttribute('data-href'), window.location.href).href;
 var name = tile.getAttribute('data-name');
 var modeX = tile.getAttribute('data-modex');
 var pic = new URL(tile.getAttribute('data-pic'), window.location.href).href;
-var mode = getStoredJSON('gams', {key: 'gamMode'}) || 'gam';
+var mode = getStoredJSON('gams', {key: 'gamMode'}) || 'embed';
 var gameShellQuery = new URLSearchParams({
 icon: pic,
 name: name,
