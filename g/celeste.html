@@ -94,7 +94,7 @@
 			if (index == 'p8b_sound') index += (pico8_state.sound_volume == 0 ? "0" : "1"); // 1 if undefined
 			if (index == 'p8b_pause') index += (pico8_state.is_paused > 0 ? "1" : "0");     // 0 if undefined
 
-			new_str = '<img width=24 height=24 style="pointer-events:none" src="'+p8_gfx_dat[index]+'">';
+			new_str = '<img width=24 height=24 style="pointer-events:none" src="'+p8_gfx_dat[index]+'" alt="Image">';
 			if (el.innerHTML != new_str)
 				el.innerHTML = new_str;
 
@@ -783,8 +783,8 @@ canvas{
 				  style=" pointer-events:none; display:table; 
 						 position:fixed; top:0px; left:0px; border:0; width:100vw; height:100vh">
 
-					<img src="" id="controls_right_panel" style="position:absolute; opacity:0.5;">
-					<img src="" id="controls_left_panel" style="position:absolute;  opacity:0.5;">
+					<img src="" id="controls_right_panel" style="position:absolute; opacity:0.5;" alt="Image">
+					<img src="" id="controls_left_panel" style="position:absolute;  opacity:0.5;" alt="Image">
 						
 			
 			</div> <!-- touch_controls_gfx -->
