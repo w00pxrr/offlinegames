@@ -7,6 +7,7 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
+<link rel="preload" href="assets/facon.ttf" as="font" type="font/ttf" crossorigin>
  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.4/css/bulma.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.4/css/bulma.min.css"></noscript>
   <!-- Primary Meta Tags -->
@@ -200,15 +201,21 @@ color: var(--nc-tx-2);
 .announcement-banner {
 margin: 12px 0 8px;
 padding: 10px 12px;
+min-height: 44px;
+display: flex;
+align-items: center;
 border-radius: 10px;
 border: 1px solid color-mix(in srgb, var(--nc-lk-1) 45%, transparent);
 background: color-mix(in srgb, var(--nc-bg-1) 82%, #f8c548 18%);
 font-weight: 700;
 font-size: 0.95rem;
+transition: opacity 0.2s ease;
 }
 
 .announcement-banner.hidden {
-display: none;
+visibility: hidden;
+opacity: 0;
+pointer-events: none;
 }
 
 .announcement-banner a {
@@ -784,11 +791,11 @@ display: block !important;
 
 
 <a href="Settings.html" class="tile card">
-<div class="card-image"><figure class="image is-square"><img alt="settings" class="img" src="img/gams-g.png"></figure></div>
+<div class="card-image"><figure class="image is-square"><img alt="settings" class="img" src="img/gams-g.png" width="512" height="512" loading="lazy" decoding="async"></figure></div>
 <div class="card-content"><span class="name">Settings</span></div>
 </a>
 <a href="g/about.html" class="tile card">
-<div class="card-image"><figure class="image is-square"><img alt="about" class="img" src="img/gams-g.png"></figure></div>
+<div class="card-image"><figure class="image is-square"><img alt="about" class="img" src="img/gams-g.png" width="512" height="512" loading="lazy" decoding="async"></figure></div>
 <div class="card-content"><span class="name">About</span></div>
 </a>
 
@@ -1469,7 +1476,11 @@ tile.appendChild(favoriteButton);
 var img = createElement('img', {
 class: 'img',
 src: game.img,
-alt: game.name
+alt: game.name,
+width: '512',
+height: '512',
+loading: 'lazy',
+decoding: 'async'
 });
 var imageFigure = createElement('figure', {class: 'image is-square'});
 imageFigure.appendChild(img);
