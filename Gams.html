@@ -40,6 +40,9 @@
 :root {
 --gams-panel-border: rgba(255, 255, 255, 0.12);
 --gams-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+--glass-surface: rgba(255, 255, 255, 0.34);
+--glass-border: rgba(255, 255, 255, 0.46);
+--glass-highlight: rgba(255, 255, 255, 0.58);
 --gams-title-color: #000000;
 --nc-tx-1: #000000;
 --nc-tx-2: #1A1A1A;
@@ -62,11 +65,42 @@ body {
 max-width: 1200px;
 margin: 0 auto;
 padding: 24px 18px 56px;
+position: relative;
+overflow-x: hidden;
 background:
 radial-gradient(circle at 12% 6%, rgba(24, 144, 255, 0.2), transparent 34%),
 radial-gradient(circle at 85% 12%, rgba(255, 130, 80, 0.22), transparent 32%),
 linear-gradient(140deg, var(--nc-bg-1) 0%, var(--nc-bg-2) 100%);
 min-height: 100vh;
+}
+
+body::before,
+body::after {
+content: "";
+position: fixed;
+border-radius: 999px;
+pointer-events: none;
+filter: blur(44px);
+opacity: 0.45;
+z-index: -1;
+animation: liquidDrift 16s ease-in-out infinite alternate;
+}
+
+body::before {
+width: 320px;
+height: 320px;
+top: -80px;
+left: -70px;
+background: radial-gradient(circle at 30% 35%, rgba(255, 255, 255, 0.85), rgba(162, 211, 255, 0.2) 58%, transparent 75%);
+}
+
+body::after {
+width: 290px;
+height: 290px;
+right: -70px;
+bottom: 15%;
+background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.84), rgba(255, 194, 160, 0.25) 56%, transparent 74%);
+animation-delay: 1.8s;
 }
 
 @font-face {
@@ -490,6 +524,112 @@ flex-wrap: wrap;
 gap: 8px;
 }
 
+.hero,
+.top-panel,
+.tile,
+.search-toggle,
+.cookie-consent,
+.cont {
+position: relative;
+overflow: hidden;
+background: color-mix(in srgb, var(--glass-surface) 78%, var(--nc-bg-1) 22%);
+border: 1px solid color-mix(in srgb, var(--glass-border) 74%, var(--gams-panel-border) 26%);
+backdrop-filter: blur(16px) saturate(140%);
+-webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+.hero::after,
+.top-panel::after,
+.tile::after,
+.cookie-consent::after,
+.cont::after {
+content: "";
+position: absolute;
+inset: -50%;
+background: linear-gradient(120deg, transparent 34%, color-mix(in srgb, var(--glass-highlight) 58%, transparent) 49%, transparent 64%);
+transform: translateX(-36%) rotate(8deg);
+animation: glassSheen 8.5s linear infinite;
+pointer-events: none;
+}
+
+.hero,
+.top-panel {
+animation: liquidBob 10s ease-in-out infinite;
+}
+
+.top-panel {
+animation-delay: 0.7s;
+}
+
+.tile:hover {
+transform: translateY(-6px) scale(1.01);
+}
+
+@keyframes liquidDrift {
+0% {
+transform: translate3d(0, 0, 0) scale(1);
+}
+100% {
+transform: translate3d(22px, -18px, 0) scale(1.08);
+}
+}
+
+@keyframes glassSheen {
+0% {
+transform: translateX(-55%) rotate(8deg);
+}
+100% {
+transform: translateX(55%) rotate(8deg);
+}
+}
+
+@keyframes liquidBob {
+0%,
+100% {
+transform: translateY(0);
+}
+50% {
+transform: translateY(-2px);
+}
+}
+
+@media (prefers-reduced-motion: reduce) {
+body::before,
+body::after,
+.hero,
+.top-panel,
+.hero::after,
+.top-panel::after,
+.tile::after,
+.cookie-consent::after,
+.cont::after {
+animation: none !important;
+}
+}
+
+html[data-reduced-motion="true"] body::before,
+html[data-reduced-motion="true"] body::after,
+html[data-reduced-motion="true"] .hero,
+html[data-reduced-motion="true"] .top-panel,
+html[data-reduced-motion="true"] .hero::after,
+html[data-reduced-motion="true"] .top-panel::after,
+html[data-reduced-motion="true"] .tile::after,
+html[data-reduced-motion="true"] .cookie-consent::after,
+html[data-reduced-motion="true"] .cont::after {
+animation: none !important;
+}
+
+html[data-reduced-motion="true"] .tile,
+html[data-reduced-motion="true"] .search-input,
+html[data-reduced-motion="true"] .slider,
+html[data-reduced-motion="true"] .slider:before {
+transition: none !important;
+}
+
+html[data-reduced-motion="true"] .tile:hover {
+transform: none !important;
+}
+
 @media (max-width: 760px) {
 body {
 padding: 16px 12px 40px;
@@ -530,6 +670,18 @@ bottom: 12px;
 </head>
 
 <body>
+<noscript>
+<style>
+body > * {
+display: none !important;
+}
+
+.no-js-message {
+display: block !important;
+}
+</style>
+<div class="no-js-message">Enable JavaScript</div>
+</noscript>
 <section class="section">
 <div class="container is-max-desktop">
 <div class="hero">
@@ -640,11 +792,25 @@ return document.getElementById(e);
 
 // Initializes page-level behaviors after DOM is ready.
 function initPage() {
+applyReducedMotionPreference();
 setSavedTheme();
 loadAnnouncement();
 bindSearchToggle();
 bindControls();
 bindCookieConsent();
+}
+
+function applyReducedMotionPreference() {
+var savedReducedMotion = getStoredJSON('gams', {key: 'reducedMotion'});
+var reduced = false;
+
+if (typeof savedReducedMotion === 'boolean') {
+reduced = savedReducedMotion;
+} else if (window.matchMedia) {
+reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+document.documentElement.setAttribute('data-reduced-motion', reduced ? 'true' : 'false');
 }
 
 // Wires the floating search button click/keyboard interactions.

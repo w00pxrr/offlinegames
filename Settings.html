@@ -98,6 +98,13 @@ font-family: 'facon', sans-serif;
 #cookieStatus {
   margin-top: 8px;
 }
+
+html[data-reduced-motion="true"] *,
+html[data-reduced-motion="true"] *::before,
+html[data-reduced-motion="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
 </style>
 <script src='i.js'></script>
 </head>
@@ -109,6 +116,14 @@ font-family: 'facon', sans-serif;
 <label>Dark Mode:</label>
 <label class="switch">
   <input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
+  <span class="slider round"></span>
+</label>
+
+<br><br>
+
+<label>Prefer Reduced Motion:</label>
+<label class="switch">
+  <input id="reducedMotionInput" type="checkbox" oninput="changeReducedMotion(this)">
   <span class="slider round"></span>
 </label>
 
@@ -281,6 +296,19 @@ function changeTheme(input) {
     }
 }
 
+function applyReducedMotion(reduced) {
+  document.documentElement.setAttribute('data-reduced-motion', reduced ? 'true' : 'false');
+}
+
+function changeReducedMotion(input) {
+  var reduced = input.checked === true;
+  applyReducedMotion(reduced);
+  storeJSON('gams', {
+    key: 'reducedMotion',
+    value: reduced
+  });
+}
+
 function changeGamMode(input) {
  storeJSON('gams', {
   key: 'gamMode',
@@ -363,6 +391,19 @@ function setSavedTheme() {
 //Set Gam Mode
 if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
 //Set gam Mode
+
+var reducedMotionInput = l('reducedMotionInput');
+var savedReducedMotion = getStoredJSON('gams', {key: 'reducedMotion'});
+if (reducedMotionInput) {
+  if (typeof savedReducedMotion === 'boolean') {
+    reducedMotionInput.checked = savedReducedMotion;
+    applyReducedMotion(savedReducedMotion);
+  } else {
+    var prefersReduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    reducedMotionInput.checked = prefersReduced;
+    applyReducedMotion(prefersReduced);
+  }
+}
 
     if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
         var theme = getStoredJSON('gams', {key: 'theme'});
