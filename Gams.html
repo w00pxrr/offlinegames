@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
- <link rel="preload" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"></noscript>
+ <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.4/css/bulma.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.4/css/bulma.min.css"></noscript>
   <!-- Primary Meta Tags -->
   <title>Gams</title>
   <meta name="title" content="Gams">
@@ -981,8 +983,8 @@ applyAutoTheme(event.matches);
 };
 if (typeof media.addEventListener === 'function') {
 media.addEventListener('change', onThemePrefChange);
-} else if (typeof media.addListener === 'function') {
-media.addListener(onThemePrefChange);
+} else if (typeof media.addEventListener === 'function') {
+media.addEventListener(onThemePrefChange);
 }
 applyAutoTheme(media.matches);
 } else {
