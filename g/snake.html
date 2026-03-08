@@ -31,7 +31,8 @@ var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
 
 var grid = 16;
-var count = 0;
+var lastTime = 0;
+var frameInterval = 1000 / 10; // 10 fps
   
 var snake = {
   x: 160,
@@ -55,14 +56,14 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function loop() {
+function loop(currentTime) {
   requestAnimationFrame(loop);
 
-  if (++count < 4) {
+  if (currentTime - lastTime < frameInterval) {
     return;
   }
 
-  count = 0;
+  lastTime = currentTime;
   context.clearRect(0,0,canvas.width,canvas.height);
 
   snake.x += snake.dx;
