@@ -1619,6 +1619,35 @@ l("mainGam").focus();
 }
 }
 
+// Gets daily featured games using date-based seeding for consistency.
+function getDailyFeaturedGames() {
+var now = new Date();
+var utcDate = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+var seed = utcDate.getTime();
+var rng = new SeededRandom(seed);
+
+var availableGames = gamesData.slice();
+var featured = [];
+var count = Math.min(4, availableGames.length);
+
+for (var i = 0; i < count; i++) {
+var idx = Math.floor(rng.next() * availableGames.length);
+featured.push(availableGames[idx]);
+availableGames.splice(idx, 1);
+}
+
+return featured;
+}
+
+// Simple seeded random number generator.
+function SeededRandom(seed) {
+this.seed = seed;
+}
+SeededRandom.prototype.next = function() {
+this.seed = (this.seed * 9301 + 49297) % 233280;
+return this.seed / 233280;
+};
+
 // Renders favorites and sectioned game tiles into the grid.
 function renderGames() {
 container.innerHTML = "";
@@ -1627,6 +1656,14 @@ var favoriteIds = getFavoriteIds();
 var favoriteMap = {};
 for (var i = 0; i < favoriteIds.length; i++) {
 favoriteMap[favoriteIds[i]] = true;
+}
+
+var featuredGames = getDailyFeaturedGames();
+if (featuredGames.length > 0) {
+fragment.appendChild(makeSectionTitle('Featured'));
+for (var d = 0; d < featuredGames.length; d++) {
+fragment.appendChild(makeTile(featuredGames[d]));
+}
 }
 
 var favoriteGames = [];
