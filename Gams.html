@@ -716,6 +716,22 @@ right: 12px;
 bottom: 12px;
 }
 }
+
+.reset-countdown {
+grid-column: 1 / -1;
+font-size: 0.9rem;
+color: var(--nc-tx-2);
+margin-top: -2px;
+margin-bottom: 12px;
+font-weight: 500;
+letter-spacing: 0.04em;
+}
+
+.reset-countdown-timer {
+color: var(--nc-lk-1);
+font-weight: 600;
+font-family: 'Courier New', monospace;
+}
 </style>
 </head>
 
@@ -1648,6 +1664,36 @@ this.seed = (this.seed * 9301 + 49297) % 233280;
 return this.seed / 233280;
 };
 
+// Creates and updates a countdown timer element for featured games reset.
+function makeCountdownElement() {
+var countdownDiv = createElement('div', {
+class: 'reset-countdown'
+});
+updateCountdown(countdownDiv);
+// Update countdown every second
+setInterval(function() { updateCountdown(countdownDiv); }, 1000);
+return countdownDiv;
+}
+
+function updateCountdown(element) {
+var now = new Date();
+var nextReset = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999);
+nextReset.setUTCDate(nextReset.getUTCDate() + 1);
+var msUntilReset = nextReset - now;
+
+if (msUntilReset < 0) msUntilReset = 0;
+
+var hours = Math.floor(msUntilReset / 3600000);
+var minutes = Math.floor((msUntilReset % 3600000) / 60000);
+var seconds = Math.floor((msUntilReset % 60000) / 1000);
+
+var timeStr = String(hours).padStart(2, '0') + ':' +
+String(minutes).padStart(2, '0') + ':' +
+String(seconds).padStart(2, '0');
+
+element.innerHTML = 'Resets in <span class="reset-countdown-timer">' + timeStr + '</span>';
+}
+
 // Renders favorites and sectioned game tiles into the grid.
 function renderGames() {
 container.innerHTML = "";
@@ -1661,6 +1707,7 @@ favoriteMap[favoriteIds[i]] = true;
 var featuredGames = getDailyFeaturedGames();
 if (featuredGames.length > 0) {
 fragment.appendChild(makeSectionTitle('Featured'));
+fragment.appendChild(makeCountdownElement());
 for (var d = 0; d < featuredGames.length; d++) {
 fragment.appendChild(makeTile(featuredGames[d]));
 }
