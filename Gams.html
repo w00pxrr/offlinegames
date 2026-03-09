@@ -198,35 +198,6 @@ letter-spacing: 0.01em;
 color: var(--nc-tx-2);
 }
 
-.announcement-banner {
-margin: 12px 0 8px;
-padding: 10px 12px;
-min-height: 44px;
-display: flex;
-align-items: center;
-border-radius: 10px;
-border: 1px solid color-mix(in srgb, var(--nc-lk-1) 45%, transparent);
-background: color-mix(in srgb, var(--nc-bg-1) 82%, #f8c548 18%);
-font-weight: 700;
-font-size: 0.95rem;
-transition: opacity 0.2s ease;
-}
-
-.announcement-banner.hidden {
-visibility: hidden;
-opacity: 0;
-pointer-events: none;
-}
-
-.announcement-banner a {
-color: inherit;
-text-decoration: none;
-}
-
-.announcement-banner a:hover {
-text-decoration: underline;
-}
-
 .top-panel {
 display: grid;
 grid-template-columns: 1fr;
@@ -752,7 +723,6 @@ display: block !important;
 <div class="container is-max-desktop">
 <div class="hero">
 <h1 class="title">Gams - Forked by w00pxrr</h1>
-<div id="announcementBanner" class="announcement-banner hidden"></div>
 <p class="subtitle">Pick a game, star your favorites, and launch instantly in your preferred mode.</p>
 </div>
 
@@ -860,7 +830,6 @@ return document.getElementById(e);
 function initPage() {
 applyReducedMotionPreference();
 setSavedTheme();
-loadAnnouncement();
 bindSearchToggle();
 bindControls();
 bindCookieConsent();
@@ -909,45 +878,6 @@ gamMode.onchange = function() {
 changeGamMode(gamMode);
 };
 }
-}
-
-// Loads the announcement config from JSON and renders the banner.
-function loadAnnouncement() {
-fetch('announcements.json', {cache: 'no-store'})
-.then(function(response) {
-if (!response.ok) {throw new Error('Failed to load announcements');}
-return response.json();
-})
-.then(function(data) {
-var banner = l('announcementBanner');
-if (!banner) {return;}
-
-if (!data || data.enabled === false || !data.text) {
-banner.classList.add('hidden');
-banner.textContent = '';
-return;
-}
-
-banner.textContent = '';
-if (data.href) {
-var target = data.newTab === false ? '_self' : '_blank';
-var link = document.createElement('a');
-link.href = data.href;
-link.target = target;
-link.rel = 'noopener noreferrer';
-link.textContent = data.text;
-banner.appendChild(link);
-} else {
-banner.textContent = data.text;
-}
-
-banner.classList.remove('hidden');
-})
-.catch(function() {
-var banner = l('announcementBanner');
-if (!banner) {return;}
-banner.classList.add('hidden');
-});
 }
 
 function loadCookieConsent() {
