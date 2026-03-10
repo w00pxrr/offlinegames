@@ -791,8 +791,9 @@ display: block !important;
 <button id="searchToggle" class="search-toggle button is-rounded is-light" type="button" aria-label="Open search">&#128269;</button>
 </div>
 
-<div id="cookieConsent" class="cookie-consent hidden" role="dialog" aria-label="Cookie preferences">
-<p class="cookie-title">Cookie Preferences</p>
+<div id="cookieConsent" class="modal" role="dialog" aria-label="Cookie preferences">
+  <div class="modal-background"></div>
+  <div class="modal-content"><p class="cookie-title">Cookie Preferences</p>
 <p class="cookie-text">Choose whether to allow analytics cookies and settings cookies.</p>
 <div class="cookie-options">
 <label class="cookie-option"><input id="consentSettings" type="checkbox" checked>Settings cookies</label>
@@ -801,7 +802,8 @@ display: block !important;
 <div class="cookie-actions">
 <button id="consentAcceptAll" class="button is-link is-small" type="button">Accept all</button>
 <button id="consentSave" class="button is-light is-small" type="button">Save choices</button>
-<button id="consentRejectAll" class="button is-small" type="button">Reject all</button>
+<button id="consentRejectAll" class="button is-small" type="button">Reject all</button></div>
+
 </div>
 </div>
 </div>
