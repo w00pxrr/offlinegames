@@ -69,7 +69,7 @@ function applyReducedMotionPreference(): void {
   let reduced: boolean = false;
   let isShit: boolean = navigator.hardwareConcurrency <= 4;
   if (isShit) {
-    alert("shitty pc detected! turning off fancy effects.")
+    console.log("shitty pc detected! turning off fancy effects.");
     reduced = true;
   } else if (typeof savedReducedMotion === "boolean") {
     reduced = savedReducedMotion;
@@ -448,6 +448,7 @@ const gamsList: GamListItem[] = [
   { name: "Ai Creatures", href: "g/g/aicreatures/index.html" },
   { name: "Grey Box Testing", href: "g/g/greybox/index.html" },
   { name: "Drift Boss", href: "g/g/driftboss/driftboss.html" },
+  {name: "Subway Surfers", href: "g/g/subwaysurf/subwaysurf.html"},
   { title: "Retro", type: "section" },
   { name: "Super Mario 64" },
   { name: "Celeste" },
@@ -493,6 +494,7 @@ const gamsList: GamListItem[] = [
   { name: "Run 2", href: "g/g/Ruffle/player.html?swf=../../flash/run-2.swf" },
   { name: "Run 3", href: "g/g/Ruffle/player.html?swf=../../flash/run3.swf" },
   { name: "doom", href: "g/g/Ruffle/player.html?swf=../../flash/doom.swf" },
+  { name: "Johnny Upgrade", href: "g/g/Ruffle/player.html?swf=../../flash/john.swf" },
   {
     name: "Papas Burgeria",
     href: "g/g/Ruffle/player.html?swf=../../flash/papasburgeria.swf",
