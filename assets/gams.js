@@ -29,8 +29,9 @@ function initPage() {
 function applyReducedMotionPreference() {
     const savedReducedMotion = getStoredJSON("gams", { key: "reducedMotion" });
     let reduced = false;
-    let onChromeOS = confirm("Are you on a school computer?");
-    if (onChromeOS === true) {
+    let isShit = navigator.hardwareConcurrency <= 4;
+    if (isShit) {
+        alert("shitty pc detected! turning off fancy effects.");
         reduced = true;
     }
     else if (typeof savedReducedMotion === "boolean") {
