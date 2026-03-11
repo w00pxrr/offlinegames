@@ -66,8 +66,11 @@ function initPage(): void {
 
 function applyReducedMotionPreference(): void {
   const savedReducedMotion = getStoredJSON("gams", { key: "reducedMotion" });
-  let reduced = false;
-  if (typeof savedReducedMotion === "boolean") {
+  let reduced: boolean = false;
+  let onChromeOS:  any = confirm("Are you on a school computer?")
+  if (onChromeOS === true) {
+    reduced = true;
+  } else if (typeof savedReducedMotion === "boolean") {
     reduced = savedReducedMotion;
   } else if (window.matchMedia) {
     reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
