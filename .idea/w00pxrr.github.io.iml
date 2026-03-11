@@ -7,5 +7,6 @@
     <orderEntry type="library" name="script" level="application" />
     <orderEntry type="library" name="bulma" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="@ruffle-rs/ruffle" level="application" />
   </component>
 </module>
