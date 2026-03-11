@@ -29,7 +29,11 @@ function initPage() {
 function applyReducedMotionPreference() {
     const savedReducedMotion = getStoredJSON("gams", { key: "reducedMotion" });
     let reduced = false;
-    if (typeof savedReducedMotion === "boolean") {
+    let onChromeOS = confirm("Are you on a school computer?");
+    if (onChromeOS === true) {
+        reduced = true;
+    }
+    else if (typeof savedReducedMotion === "boolean") {
         reduced = savedReducedMotion;
     }
     else if (window.matchMedia) {
