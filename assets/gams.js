@@ -753,9 +753,13 @@ applyDisguise();
     }
 }
 
-// Gets the 4 most recently added games based on insertion order.
+// Gets the newest games from HTML5/Unity WebGL and Flash sections only (by insertion order).
 function getLatestGames() {
-    var sorted = gamesData.slice().sort(function(a, b) {
+    var allowedSections = ['HTML5/unity Webgl', 'Flash'];
+    var filtered = gamesData.filter(function(g) {
+        return allowedSections.indexOf(g.section) !== -1;
+    });
+    var sorted = filtered.slice().sort(function(a, b) {
         return b.index - a.index;
     });
     return sorted.slice(0, 4);
