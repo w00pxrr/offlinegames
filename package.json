@@ -1,0 +1,11 @@
+{
+  "name": "w00pxrr-github-io",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0"
+  }
+}
