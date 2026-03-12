@@ -1,148 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-<title>Gams - Settings</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
 <link type="image/x-icon" rel="icon" href="img/gams-g.png">
+ <link rel="preload" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"></noscript>
+  <link rel = "preload" href = "assets/gams.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="assets/gams.css"></noscript>
+  <!-- Primary Meta Tags -->
+  <title>Settings - Gams</title>
+  <meta name="title" content="Settings - Gams">
+  <meta name="description" content="Gams settings page">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="w00pxrr.github.io/Settings.html">
+  <meta property="og:title" content="Settings - Gams">
+  <meta property="og:description" content="Gams settings page">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="w00pxrr.github.io/Settings.html">
+  <meta property="twitter:title" content="Settings - Gams">
+  <meta property="twitter:description" content="Gams settings page">
+
+  <!-- Optional Meta Tags -->
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="language" content="English">
+  <meta name="revisit-after" content="5 days days">
+  <meta name="author" content="Parker Solomon">
+
+
+</head>
+
+<body>
+<noscript>
 <style>
-html, body {
-transition: .5s;
+body > * {
+display: none !important;
 }
 
-@font-face {
-  font-family: 'facon';
-  src: url('assets/facon.ttf') format('truetype');
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-.title {
-font-size: 50pt;
-font-family: 'facon', sans-serif;
-letter-spacing: 3pt;
-}
-
-.facon {
-font-family: 'facon', sans-serif;
-}
-
-.cookie-settings {
-  margin-top: 6px;
-}
-
-.cookie-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 8px 0;
-}
-
-#cookieStatus {
-  margin-top: 8px;
-}
-
-html[data-reduced-motion="true"] *,
-html[data-reduced-motion="true"] *::before,
-html[data-reduced-motion="true"] *::after {
-  animation: none !important;
-  transition: none !important;
+.no-js-message {
+display: block !important;
 }
 </style>
-<script src='i.js'></script>
-</head>
-<body onload="setSavedTheme(); initCookieSettings();">
+<div class="no-js-message">Enable JavaScript</div>
+</noscript>
+
+<!-- Full-width Hero Section -->
+<section class="hero is-large is-primary has-background-gradient">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title is-1">Gams - Settings</h1>
+      <p class="subtitle is-3">Configure your preferences</p>
+    </div>
+  </div>
+</section>
+
+<!-- Navigation Bar -->
+<nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#"></a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="Gams.html">Home</a>
+      <a class="navbar-item" href="#settings">Settings</a>
+      <a class="navbar-item" href="g/about.html">About</a>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="field is-grouped">
+          <p class="control">
+            <span class="control-label">Dark Mode</span>
+            <label class="switch">
+              <input id="darkModeInput" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </p>
+          <p class="control">
+            <span class="control-label">Mode</span>
+            <div class="select is-small">
+              <select id='gamMode' aria-label="Open game mode">
+                <option value="gam">New Tab</option>
+                <option value="embed" selected>Embed</option>
+                <option value="blank">Blank</option>
+                <option value="direct">Replace</option>
+                <option value="raw">Raw</option>
+              </select>
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Settings Section -->
+<section id="settings" class="section">
+  <div class="container">
 <header>
 <h1 class="title">Gams - Settings</h1>
 </header>
 
-<label>Dark Mode:</label>
-<label class="switch">
-  <input id="darkModeInput" type="checkbox" checked oninput="changeTheme(this)">
-  <span class="slider round"></span>
-</label>
-
-<br><br>
-
-<label>Prefer Reduced Motion:</label>
-<label class="switch">
-  <input id="reducedMotionInput" type="checkbox" oninput="changeReducedMotion(this)">
-  <span class="slider round"></span>
-</label>
-
-<br><hr><br>
-
-<label>Open Gam Mode:</label>
-<select onchange='changeGamMode(this)' id='gamMode'>
-  <option value="embed">In this tab</option>
-  <option value="gam">In new tab</option>
-  <option value="blank">In an about:blank tab</option>
-  <option value="direct">Replace this tab</option>
-  <option value="raw">Raw link in new tab</option>
-</select>
-
-<br><hr><br>
-
 <label>Display the popout menu with mode "In new tab" from:</label>
 <select onchange='changePopoutMode(this)' id='popoutMode'>
-  <option value="top">Select</option>
+  <option value="" disabled selected>Select</option>
   <option value="top">Top</option>
   <option value="bottom">Bottom</option>
   <option value="left">Left</option>
@@ -154,8 +123,8 @@ html[data-reduced-motion="true"] *::after {
 <h2>Cookie Preferences:</h2>
 <blockquote><i>Control analytics and settings cookies for Gams.</i></blockquote>
 <div class="cookie-settings">
-  <label class="cookie-line"><input id="consentSettingsToggle" type="checkbox"> Settings cookies (favorites/preferences)</label>
-  <label class="cookie-line"><input id="consentAnalyticsToggle" type="checkbox"> Analytics cookies (Umami)</label>
+  <label class="cookie-line"><input id="consentSettings" type="checkbox"> Settings cookies (favorites/preferences)</label>
+  <label class="cookie-line"><input id="consentAnalytics" type="checkbox"> Analytics cookies (Umami)</label>
   <button onclick="saveCookieSettings()">Save Cookie Preferences</button>
   <button onclick="resetCookieConsent()">Reset Consent</button>
   <p id="cookieStatus"><small>Not saved yet.</small></p>
@@ -175,7 +144,6 @@ html[data-reduced-motion="true"] *::after {
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABsklEQVQYV6WPMY9MYRSGnzO5K5mrsczINCujkBh3ihU1CX9BMSsKtqTQ6mzDr5BFQiLRSkRoFRu7icIQ3YoCESHL3DEbmfMqzjc3d1BxmvPlS97nPK9J4n8mm75Yvsz00zkzYTYPkwypAbJ4e2xkyBuw0LpvPzfaMpURrgMUAIhgBZGBGgGznIzpGMx4OW7xatLGbBYGJJTecoHHu2h+pZ/vgP8gQ4YQw3GbB1+OQgIgkS80kYvR7igBHLkzaImi+Q1kZKEJuJB71WDvnpy1M1dBsPb0BqNJiWpGqSWN6GRJ05ELubiwvEJ33xLdxSVWT5xHVRclw8ilCoY89STwt7fu0V08BMD687thKM1biKhgM3CtwmhScu3xdSRR7pZVuPInDicDknoA+p0eRecY/U4PgOGH12y83WT783aAHDSrIBlAquBcOXmJ00dOUZ+i02Nw/CwPh4+4+exWfMqQjExuYIDC4vdwfQ7v786FEWSoAYiiucPgwDuGb9bnQlVloCw/stJ+T5F/j4MyrHxyUKCw+NsIIK4pbbAAy8gkWwUu2uzSDKT6+jMIINkdU93xH+YXTrImgXmBBtYAAAAASUVORK5CYII=" onclick="presetDisguise(this, 'Classes')" alt="Image">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACt0lEQVQ4jY1TS2iUZxQ9997v/39nxsngpJqkOogPgkV84GMhtggS2k1BXSha6kIEC8WNFMEgmF+p6MKVIOLKjYr2AS2BFkoVuujGivhA0YVUQ8QuGsXRSf7H993rwlQFo/Qs7z2Hc87iAG+DprgBAGyKn5tCbP0nBj5uP+5s1aBODVRPLD+58M4Z2tK+/D43AoCV5zfOB+T62L9PakV7Ak81wua+xzg17/aY97q0+ikeTZINAPiVPH3pbgGHo1pcq9cqWZFpWfd5ufeD+1k83brZZIgAm+S+kcBAINiKc5vWcyy/w6sKE/090sZX0+/iUP8Il+qCONPgw9p4AH9ZCqYU+jrBqZURiI4SEwHQwIK5H1ZHvpn3zyMIq5kpRxSRylEzEIb+q5CCQbAVjdYOV4lWaxE8DBzF4FHqOtAYL44jEWaA/LgFV6X1xUXZQgSzFEwAsPi7zc1ppjdIuM988By72HJ/9cq2H1fZaUrKVnQtSqzf5+olZqe53hPV5fQZOgwASfCDrupmWxkCQM7MUFi5FyCjHcgilPtAIIDE5xqkTgs98x4A4CXnti1iwq4wEZTA4ESgeX72xhfDl5CmnKZgGrCf0fHDLjEiIkMGJcbu8Z/Qotbg959wqF00IwcD2Fneqi+5GaHpFQECIEfFFugtd+zel0sj7xMjhpF2UMvXEmBRz867v3FcXVfm7TCr0S2ze3tIoS9Tw8AwPCeHr68esQ0PzgRUmq6TF8M9f17ewACViPNBwzOqVIRmdtd8COOlllkR/EQZfFaGMivEZ/6Hj7b7sRl9DHruy0bYT4AJYNS50juaLNs5Y07v3DVdtS4BxcIuFpFYWGIhF0vMzGPVhhASWjP6y7fNS7cvGEBvbMFo3cFnnxPLLLAFU5AIgAAEKIjZAHXm/cM/hpq/TortXcv933gBpn4539/Ch68AAAAASUVORK5CYII=" onclick="presetDisguise(this, 'My Drive - Google Drive')" alt="Image">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACIklEQVQ4jYWSS0iUURTHf/fe8RvHooE2VlT2FNqUGWmNEYUR9lhEEVJhUIsoXOQuap1Rq6KHNQt3LaPAIOxhlNTChUwLMU3NR1CklUzg6xvPd1ro2KhTHjjcA/e8/uf/hzmmqsUiEheRLhHxp/2TiDxQ1aK5+ZmFeSJSrwuYiMRVNZKuMxnFz51zu9T3GX/6iPGmRqS/F5WAUMEawuUVRI5UYjwPEWl2zlUYY8YMgIjUW2vPBkPfSV6uYbKvJ+uW3rZSojfuABAEQdw5d96oajHQqr7P8IUqpL8X43lEjp3EK4mBtfgt75l4+4po7U3cytWZPbcyjUlTidv642ipDu7foX7bh2zgs92jDhHpUlWdbNmuEw15OvqweqE7ZjboCAEFADrSjs1LkRM7NAt3+bWRebfYudFx9XguwFqbwePs9z/mT/6NLdAHMBpex28W0/C1Y1Zy05VFM75nUwiAZVGT/v5sgdcA3UurOPUrxvXOFhJD7fOmdn4LeNc5NbpkfWimv5mWZ8KXFKdfXqInOYBnc6gsPEjZ8mKssbQOtvEkMczYl0oK8z3un4lgppbYkhZS3Fp7bnD0Jxeba+lODmTFviFcxq29NeRHDUEQ1DnnqtNSjohIo3Nutx+keNz9gmf9zfQkB0ChYMkK9q2KcaLwMJFQGFV9Y4w5YIwZzyBBI2lRLcD9PVXN/SdFqlokInUi0iEiE9P+UUTuqurmufl/AKTzsFGmvUNUAAAAAElFTkSuQmCC" onclick="presetDisguise(this, 'Google')" alt="Image">
-<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB+0lEQVQ4jY2TvWsUQRjGf7M7u7PZS3J3XtKKRlQsgmBlZeAqU1kIgsFCTxE7QQgB/Q9ExD8gaCki2IhgrhCLCCJYWYmVmMuHwUiO7O3u7eyOxZ63m/OzeJnhnXme95n3mVecv9O52NNjD2PteWRAZiATIytFpIABZcWR7+y1xPzSTpiD/wAYjbTYKxlHsqj8a9XGhKYxnhHGgvUtSZoKMAVBHClP7pedg2cPa66eszgx4yOEwAC73YRnL2OevpCkmRiSyEJeXnXuZMLSlQquYxNGms5mzFRdUq+6tC44fFnr8uadKhMUb675KTcXPFzHZvV9wP1Hhm7XRlqa+TMR03WzD1xSkEufOwWT4y7fd/vcXYZeYEMGWguet53fNtUqyz92EIQQfPjYpxdYf3dj4IgsJ4QBAME/bDSFnVb54NNnMMYwe9yl4mX/8RcMFmmReP0W9oKEWtVl8TpM+ilkYAvD2WbC7VsaV2aUny2alwNTZm+eTli8UcGRNmGoWdvoM3VAUqs6GGO496BLe0XlBGakB2TwatVh51uPaws2R2c8jhwaw2DY/Brz+Emf9oo7BINANC/tV1Bu0nQjoT6REQSC9Y6D0YNvbsTgEkhlx1GslTckKHV4e8the6M8Hz8r52Cl4sjynbCl7CganbQiShNqhiajVBz5ftD6ATaARn+sBDd0AAAAAElFTkSuQmCC" onclick="presetDisguise(this, 'Clever | Portal')" alt="Image">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAdElEQVQ4jWN0bvse////nwkMDIwCDKSBB4yMzA2MTm1f7jP8Z1AgUTMMfGCiQDMDAwODAAsyb28VN1G6nNu+wtlMFNjOwMDAwIDiAmSTiQXUdcFoGOAPA1yuGxxh8IECBzxgYmBgKGRgZHhAut7/HxgYGBoB3s8g7yv6EgQAAAAASUVORK5CYII=" onclick="presetDisguise(this, 'Google Docs')" alt="Image">
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACEUlEQVQ4jcWSP0jUYRjHP8/7/t7z/JelHAhJEN2QUmKFp1DkkIVubVK0NCSI0ODWdksNQRQJQhq0NQQ1ZYM5aIiY1iZEdIKQQ/BT01S8636/92nIjgyusb7Ld/n+4fnywP+GAMw2NdW7hO3cNW7hfC4X/s2gr0jFB2z7znY8V9fDusmC0YQddcaMO1+c+nDqeFc589adxq6oIpiyVsargmBUsxiTSaediQsn86pYkZbqZMX42sXMkGYxpdYsJjzXOaTLdeOBo4U8BBq3ksEFd699kitvbsRtyxNE6sFItRO5tzrTnvlyyd0EWJ0pPnQJ+rw3+MhjRJj43hS9XLpMAPD0wjBLuRf0zN7G+oiCT1Ahpi8ffW8FqLC2Oe89VXi21DG808rzrSNsp3OYynrUasxcy1Ue9z7RsOZwmMST957AmObAmOa89ySN8FmT4eDGWX22e4xg78A9UlxUYKXxNPczDwYo5kecCAoo4ESQOBq51XZ0YDFqIClxadjSUABOI/lYk16rnV4cjNB+gU2BzQjtr51+P5hrDNYSovK7Z18AQKUvWIDU5MJYLHTHQndqcmEMoDLC/qkPfrGIART1cakh9Xr+3T6194KzIILGP72mY52iIvMeH3r1obW2UO6RxJgCsQ9RH+J1PtfbUQyyWfFnHun1hm8cAljZYaNcwLaVtweD+ARAYSv1Fcn6ctp/hx+qpdgPE5JfygAAAABJRU5ErkJggg==" onclick="presetDisguise(this, 'Drafts (24) -  G-Mail')" alt="Image">
 
@@ -185,388 +153,81 @@ html[data-reduced-motion="true"] *::after {
 <br><hr><br>
 
 <a href="Gams.html"><small class="facon">Gams</small></a>
-
+  </div>
+</section>
+<script defer src="assets/gams.js"></script>
 <script>
-const BroadcastDisguise = (typeof BroadcastChannel !== 'undefined')
-  ? new BroadcastChannel('BroadcastDisguise')
-  : null;
-const COOKIE_CONSENT_KEY = 'gams_cookie_consent_v1';
+// Settings page specific code
 
-function l(e) {
-  return document.getElementById(e);
+// Popout mode change handler
+function changePopoutMode(select) {
+  storeJSON('gams', {key: 'popoutMode', value: select.value});
 }
 
-function setLight() {
-document.documentElement.style.setProperty('--nc-tx-1', "#000000");
-document.documentElement.style.setProperty('--nc-tx-2', "#1A1A1A");
-document.documentElement.style.setProperty('--nc-bg-1', "#FFFFFF");
-document.documentElement.style.setProperty('--nc-bg-2', "#F6F8FA");
-document.documentElement.style.setProperty('--nc-bg-3', "#E5E7EB");
-document.documentElement.style.setProperty('--nc-lk-1', "#0070F3");
-document.documentElement.style.setProperty('--nc-lk-2', "#0366D6");
-document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
-document.documentElement.style.setProperty('--nc-ac-1', "#79FFE1");
-document.documentElement.style.setProperty('--nc-ac-tx', "#0C4047");
-}
-
-function setDark() {
-document.documentElement.style.setProperty('--nc-tx-1', "#ffffff");
-document.documentElement.style.setProperty('--nc-tx-2', "#eeeeee");
-document.documentElement.style.setProperty('--nc-bg-1', "#000000");
-document.documentElement.style.setProperty('--nc-bg-2', "#111111");
-document.documentElement.style.setProperty('--nc-bg-3', "#222222");
-document.documentElement.style.setProperty('--nc-lk-1', "#3291FF");
-document.documentElement.style.setProperty('--nc-lk-2', "#0070F3");
-document.documentElement.style.setProperty('--nc-lk-tx', "#FFFFFF");
-document.documentElement.style.setProperty('--nc-ac-1', "#7928CA");
-document.documentElement.style.setProperty('--nc-ac-tx', "#FFFFFF");
-}
-
-function getStoredJSON(key, data) {
- if (data && data.key && (localStorage[key] !== 'null')) {
-  var inStore;
-  try {
-   inStore = JSON.parse(localStorage[key]);
-  } catch (_e) {
-   return null;
-  }
-  if ((typeof inStore === 'object') && Object.prototype.hasOwnProperty.call(inStore, data.key)) {
-   return inStore[data.key];
-  }
- }
- if (localStorage[key] && !data) {
-  try {
-   return JSON.parse(localStorage[key]);
-  } catch (_e) {
-   return null;
-  }
- }
- return null;
-}
-
-function storeJSON(key, data) {
- var inStore;
- if (localStorage[key]) {
-  try {
-   inStore = JSON.parse(localStorage[key]) || {};
-  } catch (_e) {
-   inStore = {};
-  }
-  inStore[data.key] = data.value;
-  localStorage[key] = JSON.stringify(inStore);
- }else{
-  inStore = {};
-  inStore[data.key] = data.value;
-  localStorage[key] = JSON.stringify(inStore);
- }
- 
- return localStorage[key];
-}
-
-function removeJSON(key, data) {
- if (localStorage[key]) {
-  var inStore;
-  try {
-   inStore = JSON.parse(localStorage[key]) || {};
-  } catch (_e) {
-   inStore = {};
-  }
-   if (Object.prototype.hasOwnProperty.call(inStore, data.key)) {
-    delete inStore[data.key];
-   }
-  localStorage[key] = JSON.stringify(inStore);
- }
- return localStorage[key];
-}
-
-function changeTheme(input) {
-    var wantsDarkMode = (input.checked);
-    if (wantsDarkMode) {
-        setDark();
-        storeJSON('gams', {
-         key: 'theme',
-         value: 'dark'
-        })
-    } else {
-        setLight();
-        storeJSON('gams', {
-         key: 'theme',
-         value: 'light'
-        })
+// Initialize popout mode on load
+document.addEventListener('DOMContentLoaded', function() {
+  var popoutModeSelect = document.getElementById('popoutMode');
+  if (popoutModeSelect) {
+    var saved = getStoredJSON('gams', {key: 'popoutMode'});
+    if (saved) {
+      popoutModeSelect.value = saved;
     }
-}
-
-function applyReducedMotion(reduced) {
-  document.documentElement.setAttribute('data-reduced-motion', reduced ? 'true' : 'false');
-}
-
-function changeReducedMotion(input) {
-  var reduced = input.checked === true;
-  applyReducedMotion(reduced);
-  storeJSON('gams', {
-    key: 'reducedMotion',
-    value: reduced
-  });
-}
-
-function changeGamMode(input) {
- storeJSON('gams', {
-  key: 'gamMode',
-  value: input.value
- });
-}
-
-function changePopoutMode(input) {
- storeJSON('gams', {
-  key: 'popoutMode',
-  value: input.value
- });
-}
-
-function getCookieConsent() {
-  var raw = localStorage.getItem(COOKIE_CONSENT_KEY);
-  if (!raw) {return null;}
-  try {
-    var parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === 'object') {return parsed;}
-  } catch (_e) {}
-  return null;
-}
-
-function setCookieConsent(consent) {
-  localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
-}
-
-function clearCookie(name) {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax';
-}
-
-function setCookieStatus(text) {
-  var status = l('cookieStatus');
-  if (!status) {return;}
-  status.innerHTML = '<small>' + text + '</small>';
-}
-
-function initCookieSettings() {
-  var settingsToggle = l('consentSettingsToggle');
-  var analyticsToggle = l('consentAnalyticsToggle');
-  if (!settingsToggle || !analyticsToggle) {return;}
-
-  var consent = getCookieConsent();
-  if (consent) {
-    settingsToggle.checked = consent.settings === true;
-    analyticsToggle.checked = consent.analytics === true;
-    setCookieStatus('Current choice loaded.');
-  } else {
-    settingsToggle.checked = true;
-    analyticsToggle.checked = false;
-    setCookieStatus('No saved choice yet. Pick your preferences and save.');
   }
-}
+});
 
-function saveCookieSettings() {
-  var settingsToggle = l('consentSettingsToggle');
-  var analyticsToggle = l('consentAnalyticsToggle');
-  if (!settingsToggle || !analyticsToggle) {return;}
-
-  var consent = {
-    settings: settingsToggle.checked,
-    analytics: analyticsToggle.checked
-  };
-  setCookieConsent(consent);
-  if (!consent.settings) {
-    clearCookie('gams_favorites');
-  }
-  setCookieStatus('Saved. New preferences will apply across Gams pages.');
-}
-
-function resetCookieConsent() {
-  localStorage.removeItem(COOKIE_CONSENT_KEY);
-  clearCookie('gams_favorites');
-  initCookieSettings();
-  setCookieStatus('Consent reset. The popup will show again on Gams.');
-}
-
-function setSavedTheme() {
-//Set Gam Mode
-if (getStoredJSON('gams', {key: 'gamMode'})) {document.getElementById('gamMode').value = getStoredJSON('gams', {key: 'gamMode'})}
-//Set gam Mode
-
-var reducedMotionInput = l('reducedMotionInput');
-var savedReducedMotion = getStoredJSON('gams', {key: 'reducedMotion'});
-if (reducedMotionInput) {
-  if (typeof savedReducedMotion === 'boolean') {
-    reducedMotionInput.checked = savedReducedMotion;
-    applyReducedMotion(savedReducedMotion);
-  } else {
-    var prefersReduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    reducedMotionInput.checked = prefersReduced;
-    applyReducedMotion(prefersReduced);
-  }
-}
-
-    if (getStoredJSON('gams') && getStoredJSON('gams', {key: 'theme'})) {
-        var theme = getStoredJSON('gams', {key: 'theme'});
-        if (theme === 'light') {
-            //eww you monster
-            setLight();
-            l('darkModeInput').checked = false;
-        } else if (theme === 'dark') {
-            setDark();
-            l('darkModeInput').checked = true;
-        }
-    } else {
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            var newColorScheme = event.matches ? "dark" : "light";
-            if (newColorScheme === 'dark') {
-                l('darkModeInput').checked = true;
-            }
-            if (newColorScheme === 'light') {
-                l('darkModeInput').checked = false;
-            }
-        });
-
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            l('darkModeInput').checked = true;
-        } else {
-            l('darkModeInput').checked = false;
-        }
-    }
-}
-
-function fileToData(file, callback) {
- var reader = new FileReader();
- reader.onload = function(e){
-  callback(e.target.result);
- };
- reader.readAsDataURL(file);
-}
-
-function fitDimensions(e, t, n) {
-var o = e.width;
-var c = e.height;
-
-o>c?o>t&&(c=Math.round(c*t/o),o=t):c>n&&(o=Math.round(o*n/c),c=n);
-
-return[o,c];
-}
-  
- function handleFileSelect(file){
-    var blob = URL.createObjectURL(file);
-    
-    var img = new Image;
-    img.src = blob;
-    
-    img.onload = function(){
-     var dimensions = fitDimensions(img, 30, 30);
-     var canvas = document.createElement("canvas");
-     var wdth = dimensions[0];
-     var heit = dimensions[1];
-     
-     canvas.width = wdth;
-     canvas.height = heit;
-     var ctx = canvas.getContext("2d");
-     ctx.drawImage(img, 0, 0, wdth, heit);
-     canvas.toBlob(function(e) {
-      if (!e) {return;}
-      fileToData(e, function(data){
-       storeJSON('gams', {
-         key: 'icon',
-         value: data
-        });
-        applyDisguise();
-        if (BroadcastDisguise) {
-         BroadcastDisguise.postMessage('update');
-        }
-      });
-     }, "image/png", 0);
-  }
- }
- 
+// Disguise functions (using gams.js utilities)
 function applyTitle() {
- var input = l('tabName');
- if (input.value) {
-  storeJSON('gams', {
-   key: 'title',
-   value: input.value
-  });
-  if (BroadcastDisguise) {
-   BroadcastDisguise.postMessage('update');
+  var input = document.getElementById('tabName');
+  if (input && input.value) {
+    storeJSON('gams', {key: 'title', value: input.value});
+    if (BroadcastDisguise) {
+      BroadcastDisguise.postMessage('update');
+    }
+    applyDisguise();
+  } else {
+    alert("Choose a title.");
   }
-  applyDisguise();
- }else{
-  alert("Choose a title.");
- }
 }
- 
+
 function applyIcon() {
- var input = l('tabIcon');
- if (input.files && input.files.length >= 1) {
-  handleFileSelect(input.files[0]);
- }else{
-  alert("Upload a file.");
- }
+  var input = document.getElementById('tabIcon');
+  if (input && input.files && input.files.length >= 1) {
+    handleFileSelect(input.files[0]);
+  } else {
+    alert("Upload a file.");
+  }
+}
+
+// handleFileSelect from original Settings.html
+function handleFileSelect(file) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataURL = e.target.result;
+    storeJSON('gams', {key: 'icon', value: dataURL});
+    applyDisguise();
+    if (BroadcastDisguise) {
+      BroadcastDisguise.postMessage('update');
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function removeDisguise() {
- removeJSON('gams', {key: 'icon'});
- removeJSON('gams', {key: 'title'});
- if (BroadcastDisguise) {
-  BroadcastDisguise.postMessage('update');
- }
- applyDisguise();
+  removeJSON('gams', {key: 'icon'});
+  removeJSON('gams', {key: 'title'});
+  if (BroadcastDisguise) {
+    BroadcastDisguise.postMessage('update');
+  }
+  applyDisguise();
 }
-
-function setFavicon(href) {
-  var existFav = document.querySelectorAll('link[rel*="icon"]');
-  existFav.forEach(function(favicon) {
-    favicon.parentNode.removeChild(favicon);
-  });
-
-  var link = document.createElement('link');
-  link.type = 'image/x-icon';
-  link.rel = 'icon';
-  link.href = href;
-  document.getElementsByTagName('head')[0].appendChild(link);
-}
-
-const ogTitle = document.title;
-const ogIcon = document.querySelectorAll('link[rel*="icon"]')[0].href;
-
-function applyDisguise() {
- var icon = getStoredJSON('gams', {key: 'icon'});
- var title = getStoredJSON('gams', {key: 'title'});
- if (title) {
-  document.title = (title);
- }else{
-  document.title = (ogTitle);
- }
-
- if (icon) {
-  setFavicon(icon)
- }else{
-  setFavicon(ogIcon)
- }
-}
-
-applyDisguise();
 
 function presetDisguise(img, title) {
-storeJSON('gams', {key: 'icon', value: img.src});
-storeJSON('gams', {key: 'title', value: title});
-
-if (BroadcastDisguise) {
-BroadcastDisguise.postMessage('update');
-}
-
-applyDisguise();
-}
-
-if (BroadcastDisguise) {
-BroadcastDisguise.onmessage = () => {
-applyDisguise();
-};
+  storeJSON('gams', {key: 'icon', value: img.src});
+  storeJSON('gams', {key: 'title', value: title});
+  if (BroadcastDisguise) {
+    BroadcastDisguise.postMessage('update');
+  }
+  applyDisguise();
 }
 </script>
 </body>

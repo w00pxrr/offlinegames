@@ -132,6 +132,24 @@ fill: var(--fill-hover);
     display: grid;
   }
 }
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: var(--bg-2);
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 1px solid var(--fill);
+}
+
+.main {
+  flex: 1;
+  position: relative;
+}
 </style>
 </head>
 <body>
@@ -310,6 +328,17 @@ var styleElm = document.createElement('style');
 styleElm.textContent = style;
 document.body.appendChild(styleElm);
 </script>
+<div class="container">
+  <div class="sidebar">
+    <h3 style="color: var(--tx);">Recommended Games</h3>
+    <div id="recommended">
+    </div>
+  </div>
+  <div class="main">
+    <iframe src="" onload="this.focus();" id="frame" style="height:100%;width:100%;border:0" title="Game frame"></iframe>
+  </div>
+</div>
+
 <div class="info-menu">
 
 <img id="icon-img" style="width:50px;height:50px;border-radius:10px;" src="" alt="Game icon">
@@ -330,8 +359,6 @@ document.body.appendChild(styleElm);
 </div>
 
 </div>
-
-<iframe src="" onload="this.focus();" id="frame" style="height:100vh;width:100vw;border:0" title="Game frame"></iframe>
 <div class="mobile-dpad" id="mobileDpad" aria-label="Mobile arrow controls">
   <button class="arrow-btn arrow-up" type="button" data-key="ArrowUp" aria-label="Arrow Up">&#9650;</button>
   <button class="arrow-btn arrow-left" type="button" data-key="ArrowLeft" aria-label="Arrow Left">&#9664;</button>
@@ -528,6 +555,24 @@ BroadcastDisguise.onmessage = () => {
 applyDisguise();
 };
 }
+
+const recommendedGames = [
+  {name: "Drive Mad", href: "g/g/drivemad/drivemad.html", img: "img/drivemad.jpeg"},
+  {name: "2048", href: "g/2048.html", img: "img/2048.jpeg"},
+  {name: "Slope", href: "g/slope.html", img: "img/slope.jpeg"},
+  {name: "Snake", href: "g/snake.html", img: "img/snake.jpeg"}
+];
+
+function makeTile(game) {
+  const tile = document.createElement('div');
+  tile.style.cssText = 'margin: 10px 0; padding: 10px; background: var(--bg); border-radius: 10px; cursor: pointer; border: 1px solid var(--fill);';
+  tile.innerHTML = `<img src="${resolveGamUrl(game.img)}" alt="${game.name}" style="width:100%; border-radius: 5px;"><p style="margin: 5px 0; text-align: center; color: var(--tx); font-size: 14px;">${game.name}</p>`;
+  tile.onclick = () => window.location.href = resolveGamUrl(game.href);
+  return tile;
+}
+
+const rec = document.getElementById('recommended');
+recommendedGames.forEach(game => rec.appendChild(makeTile(game)));
 </script>
 </body>
 </html>

@@ -53,93 +53,128 @@ display: block !important;
 </style>
 <div class="no-js-message">Enable JavaScript</div>
 </noscript>
-<section class="section">
-<div class="container is-max-desktop">
-<div class="hero">
-<h1 class="title">Gams - Forked by w00pxrr</h1>
-<p class="subtitle">Pick a game, star your favorites, and launch instantly in your preferred mode.</p>
-</div>
 
-<div class="top-panel box">
-<div class="columns is-variable is-4 is-vcentered">
-<div class="column">
-<div class="field is-grouped is-grouped-multiline">
-<div class="control">
-<span class="control-label">Dark Mode</span>
-<label class="switch">
-<input id="darkModeInput" type="checkbox" checked>
-<span class="slider round"></span>
-</label>
-</div>
-
-<div class="control">
-<span class="control-label">Open Gam Mode</span>
-<div class="select is-medium">
-<select id='gamMode' aria-label="Open game mode">
-<option value="gam">In new tab</option>
-<option value="embed" selected>On this tab</option>
-<option value="blank">In an about:blank tab</option>
-<option value="direct">Replace this tab</option>
-<option value="raw">Raw link in new tab</option>
-</select>
-</div>
-</div>
-</div>
-</div>
-
-<div class="column">
-<div class="status-row">
-<p class="total-games">Total Games: <span class="tag is-link is-light is-medium" id="totalGames">Loading...</span></p>
-<a class="report-link button is-link is-light" href="https://github.com/w00pxrr/w00pxrr.github.io">Found a bug? Report it here</a>
-</div>
-</div>
-</div>
-</div>
-
-<div class="overlay" id="overlay" style="display:none">
-<div class="shade" id="shade"></div>
-<div class="cont" id="cont">
-<a id="newWin" title="Open in new window" target="_blank" rel="noopener noreferrer">&#8599;</a>
-<iframe style="width:100%;height:100%;border-radius:10px" id="mainGam" title="Embedded game player"></iframe>
-
-<div class='loader' id='loader'></div>
-</div>
-</div>
-
-
-<div id="contain">
-
-
-<a href="Settings.html" class="tile card">
-<div class="card-image"><figure class="image is-square"><img alt="settings" class="img" src="img/gams-g.png" width="253" height="253" fetchpriority="high" decoding="async"></figure></div>
-<div class="card-content"><span class="name">Settings</span></div>
-</a>
-<a href="g/about.html" class="tile card">
-<div class="card-image"><figure class="image is-square"><img alt="about" class="img" src="img/gams-g.png" width="253" height="253" fetchpriority="high" decoding="async"></figure></div>
-<div class="card-content"><span class="name">About</span></div>
-</a>
-
-</div>
-
-<div id="searcher">
-<button id="searchToggle" class="search-toggle button is-rounded is-light" type="button" aria-label="Open search">&#128269;</button>
-</div>
-
-<div id="cookieConsent" class="cookie-consent hidden" role="dialog" aria-label="Cookie preferences">
-<p class="cookie-title">Cookie Preferences</p>
-<p class="cookie-text">Choose whether to allow analytics cookies and settings cookies.</p>
-<div class="cookie-options">
-<label class="cookie-option"><input id="consentSettings" type="checkbox" checked>Settings cookies</label>
-<label class="cookie-option"><input id="consentAnalytics" type="checkbox">Analytics cookies</label>
-</div>
-<div class="cookie-actions">
-<button id="consentAcceptAll" class="button is-link is-small" type="button">Accept all</button>
-<button id="consentSave" class="button is-light is-small" type="button">Save choices</button>
-<button id="consentRejectAll" class="button is-small" type="button">Reject all</button>
-</div>
-</div>
-</div>
+<!-- Full-width Hero Section -->
+<section class="hero is-large is-primary has-background-gradient">
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title is-1">Gams - Forked by w00pxrr</h1>
+      <p class="subtitle is-3">Fun educational games for schools</p>
+    </div>
+  </div>
 </section>
+
+<!-- Navigation Bar -->
+<nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="#"></a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="#categories">Categories</a>
+      <a class="navbar-item" href="#games">Games</a>
+      <a class="navbar-item" href="Settings.html">Settings</a>
+      <a class="navbar-item" href="g/about.html">About</a>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="field is-grouped">
+          <p class="control">
+            <span class="control-label">Dark Mode</span>
+            <label class="switch">
+              <input id="darkModeInput" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+          </p>
+          <p class="control">
+            <span class="control-label">Mode</span>
+            <div class="select is-small">
+              <select id='gamMode' aria-label="Open game mode">
+                <option value="gam">New Tab</option>
+                <option value="embed" selected>Embed</option>
+                <option value="blank">Blank</option>
+                <option value="direct">Replace</option>
+                <option value="raw">Raw</option>
+              </select>
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Search Bar -->
+<section class="section">
+  <div class="container">
+    <div class="field">
+      <div class="control">
+        <input class="input is-large" type="text" placeholder="Search games..." id="searchInput">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section id="categories" class="section">
+  <div class="container">
+    <h2 class="title is-2">Categories</h2>
+    <div class="buttons">
+      <button class="button is-primary category-btn" data-category="all">All</button>
+      <button class="button is-light category-btn" data-category="favorites">Favorites</button>
+      <button class="button is-light category-btn" data-category="action">Action</button>
+      <button class="button is-light category-btn" data-category="puzzle">Puzzle</button>
+      <button class="button is-light category-btn" data-category="adventure">Adventure</button>
+      <button class="button is-light category-btn" data-category="sports">Sports</button>
+      <button class="button is-light category-btn" data-category="tools">Tools</button>
+      <button class="button is-light category-btn" data-category="runner">Runner</button>
+    </div>
+  </div>
+</section>
+
+<!-- Games Grid -->
+<section id="games" class="section">
+  <div class="container is-fluid">
+    <div class="columns is-multiline" id="contain">
+      <!-- Games will be loaded here by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Overlay for embedded games -->
+<div class="overlay" id="overlay" style="display:none">
+  <div class="shade" id="shade"></div>
+  <div class="cont" id="cont">
+    <a id="newWin" title="Open in new window" target="_blank" rel="noopener noreferrer">&#8599;</a>
+    <iframe style="width:100%;height:100%;border-radius:10px" id="mainGam" title="Embedded game player"></iframe>
+    <div class='loader' id='loader'></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p>Total Games: <span class="tag is-link is-light is-medium" id="totalGames">Loading...</span></p>
+    <p><a class="button is-link is-light" href="https://github.com/w00pxrr/w00pxrr.github.io">Found a bug? Report it here</a></p>
+  </div>
+</footer>
+
+<!-- Cookie Consent -->
+<div id="cookieConsent" class="cookie-consent hidden" role="dialog" aria-label="Cookie preferences">
+  <p class="cookie-title">Cookie Preferences</p>
+  <p class="cookie-text">Choose whether to allow analytics cookies and settings cookies.</p>
+  <div class="cookie-options">
+    <label class="cookie-option"><input id="consentSettings" type="checkbox" checked>Settings cookies</label>
+    <label class="cookie-option"><input id="consentAnalytics" type="checkbox">Analytics cookies</label>
+  </div>
+  <div class="cookie-actions">
+    <button id="consentAcceptAll" class="button is-link is-small" type="button">Accept all</button>
+    <button id="consentSave" class="button is-light is-small" type="button">Save choices</button>
+    <button id="consentRejectAll" class="button is-small" type="button">Reject all</button>
+  </div>
+</div>
 
 <script defer src="assets/gams.js">
 
