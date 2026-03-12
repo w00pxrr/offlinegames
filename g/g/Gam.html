@@ -157,67 +157,11 @@ fill: var(--fill-hover);
 <!-- The Modal -->
 <div id="myModal" class="modal">
   <div class="modal-content">
-    <span class="close">&times;</span>
-    <h1>Settings</h1>
-    <p>Choose your settings below.</p>
-    <hr>
-
-      <label for="windowLock">Ask Before Closing Window:</label>
-      <input type="checkbox" id="windowLock" onchange="toggleWindowLock()">
-<br>
-    <label for="mySlider">Brightness:</label>
-    <input type="range" min="10" max="200" value="100" style="width: 200px; background: grey;" id="mySlider" oninput="updateFilters()">
-    <br>
-    <label for="contrastSlider">Contrast:</label>
-    <input type="range" min="0" max="200" value="100" style="width: 200px; background: grey;" id="contrastSlider" oninput="updateFilters()">
-    <br>
-    <label for="hueSlider">Hue:</label>
-    <input type="range" min="0" max="360" value="0" style="width: 200px; background: grey;" id="hueSlider" oninput="updateFilters()">
-    <br>
-    <label for="blurSlider">Blur:</label>
-    <input type="range" min="0" max="10" value="0" step="0.1" style="width: 200px; background: grey;" id="blurSlider" oninput="updateFilters()">
-    <br>
-    <label for="saturateSlider">Saturate:</label>
-    <input type="range" min="0" max="200" value="100" style="width: 200px; background: grey;" id="saturateSlider" oninput="updateFilters()">
-    <br>
-    <label for="grayscaleSlider">Grayscale:</label>
-    <input type="range" min="0" max="100" value="0" style="width: 200px; background: grey;" id="grayscaleSlider" oninput="updateFilters()">
-    <br>
-    <label for="sepiaSlider">Sepia:</label>
-    <input type="range" min="0" max="100" value="0" style="width: 200px; background: grey;" id="sepiaSlider" oninput="updateFilters()">
-    <br>
-    <label for="invertSlider">Invert:</label>
-    <input type="range" min="0" max="100" value="0" style="width: 200px; background: grey;" id="invertSlider" oninput="updateFilters()">
-    <br>
-    <label for="opacitySlider">Opacity:</label>
-    <input type="range" min="0" max="1" value="1" step="0.1" style="width: 200px; background: grey;" id="opacitySlider" oninput="updateFilters()">
-    <br>
-    <label for="dropShadowSlider">Drop Shadow:</label>
-    <input type="range" min="0" max="10" value="0" step="0.1" style="width: 200px; background: grey;" id="dropShadowSlider" oninput="updateFilters()">
+  <a href="https://w00pxrr.github.io/Gams.html></a>
   </div>
  </div>
   <script>
-    function updateFilters() {
-      var brightness = document.getElementById("mySlider").value;
-      var contrast = document.getElementById("contrastSlider").value;
-      var hue = document.getElementById("hueSlider").value;
-      var blur = document.getElementById("blurSlider").value;
-      var saturate = document.getElementById("saturateSlider").value;
-      var grayscale = document.getElementById("grayscaleSlider").value;
-      var sepia = document.getElementById("sepiaSlider").value;
-      var invert = document.getElementById("invertSlider").value;
-      var opacity = document.getElementById("opacitySlider").value;
-      var dropShadow = document.getElementById("dropShadowSlider").value;
-
-      var filterValue = `brightness(${brightness}%) contrast(${contrast}%) hue-rotate(${hue}deg) blur(${blur}px) saturate(${saturate}%) grayscale(${grayscale}%) sepia(${sepia}%) invert(${invert}%)`;
-      document.body.style.filter = filterValue;
-
-      document.body.style.opacity = opacity;
-
-      var dropShadowValue = `0 0 ${dropShadow}px rgba(0, 0, 0, 0.5)`;
-      document.body.style.boxShadow = dropShadowValue;
-    }
-    
+   
  function toggleWindowLock() {
   var windowLockCheckbox = document.getElementById("windowLock");
   if (windowLockCheckbox.checked) {
