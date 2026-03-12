@@ -29,11 +29,21 @@ interface GameData {
   img: string;
   type: string;
   section: string;
+  category: string;
   index: number;
 }
 
 function isSectionEntry(entry: GamListItem): entry is GamListSection {
   return "title" in entry && entry.title !== undefined;
+}
+
+function getCategory(name: string): string {
+  const lower = name.toLowerCase();
+  if (lower.includes('soccer') || lower.includes('football') || lower.includes('sports')) return 'sports';
+  if (lower.includes('puzzle') || lower.includes('quiz') || lower.includes('bloxorz') || lower.includes('tetris') || lower.includes('2048') || lower.includes('wordle') || lower.includes('impossible')) return 'puzzle';
+  if (lower.includes('mario') || lower.includes('sonic') || lower.includes('geometry dash') || lower.includes('slope') || lower.includes('run') || lower.includes('drift') || lower.includes('drive') || lower.includes('tunnel') || lower.includes('madalin') || lower.includes('stickman') || lower.includes('qwop') || lower.includes('aim') || lower.includes('snake') || lower.includes('pacman') || lower.includes('cat ninja') || lower.includes('burrito bison') || lower.includes('hole io') || lower.includes('tube jumpers') || lower.includes('agario') || lower.includes('paper io') || lower.includes('cell machine') || lower.includes('evil glitch') || lower.includes('game inside') || lower.includes('grey box') || lower.includes('ai creatures') || lower.includes('fluid simulator') || lower.includes('mountain maze') || lower.includes('radius raid') || lower.includes('rolling forests') || lower.includes('stack') || lower.includes('its raining boxes') || lower.includes('sand game') || lower.includes('offline paradise') || lower.includes('spacebar clicker') || lower.includes('cube field') || lower.includes('cookie clicker')) return 'action';
+  if (lower.includes('adventure') || lower.includes('retro') || lower.includes('celeste') || lower.includes('portal') || lower.includes('fireboy') || lower.includes('watergirl') || lower.includes('raft') || lower.includes('worlds hardest') || lower.includes('escaping') || lower.includes('infiltrating') || lower.includes('fleeing') || lower.includes('breaking') || lower.includes('stealing') || lower.includes('bloons tower defense') || lower.includes('learn to fly') || lower.includes('papas') || lower.includes('just one boss') || lower.includes('40x escape') || lower.includes('duck life') || lower.includes('use boxmen') || lower.includes('doom') || lower.includes('johnny upgrade') || lower.includes('ruffle') || lower.includes('web retro') || lower.includes('proxy browser') || lower.includes('code editor') || lower.includes('calculator')) return 'adventure';
+  return 'action'; // default
 }
 
 // --- Bootstrap: ensure stored gam mode exists (runs before init) ---
@@ -62,6 +72,8 @@ function initPage(): void {
   bindSearchToggle();
   bindControls();
   bindCookieConsent();
+  bindSearchInput();
+  bindCategoryButtons();
 }
 
 function applyReducedMotionPreference(): void {
@@ -193,6 +205,31 @@ function bindCookieConsent(): void {
     applyCookieConsent(consent);
     popup.classList.add("hidden");
   };
+}
+
+function bindSearchInput(): void {
+  const input = l("searchInput") as HTMLInputElement | null;
+  if (!input) return;
+  input.oninput = () => {
+    searchTerm = input.value.toLowerCase();
+    renderGames();
+  };
+}
+
+function bindCategoryButtons(): void {
+  const buttons = document.querySelectorAll('.category-btn');
+  buttons.forEach(btn => {
+    (btn as HTMLButtonElement).onclick = () => {
+      currentCategory = (btn as HTMLElement).dataset.category || 'all';
+      buttons.forEach(b => {
+        b.classList.remove('is-primary');
+        b.classList.add('is-light');
+      });
+      btn.classList.remove('is-light');
+      btn.classList.add('is-primary');
+      renderGames();
+    };
+  });
 }
 
 function setLight(): void {
@@ -578,6 +615,8 @@ function toggleFavorite(gameId: string): void {
 const sectionOrder: string[] = [];
 const gamesData: GameData[] = [];
 let currentSection: string = "";
+let searchTerm = "";
+let currentCategory = "all";
 
 for (let j = 0; j < gamsList.length; j++) {
   const gam = gamsList[j];
@@ -597,6 +636,7 @@ for (let j = 0; j < gamsList.length; j++) {
     img: gam.img ?? (gam.src ? "img/" + gam.src : "img/" + imgName + ".jpeg"),
     type: gam.type ?? "",
     section: currentSection || "Other",
+    category: getCategory(gam.name),
     index: gamesData.length,
   });
 }
@@ -787,36 +827,35 @@ function renderGames(): void {
     favoriteMap[favoriteIds[i]] = true;
   }
 
-  const latestGames = getLatestGames();
-  if (latestGames.length > 0) {
-    fragment.appendChild(makeSectionTitle("New Games"));
-    for (let d = 0; d < latestGames.length; d++) {
-      fragment.appendChild(makeTile(latestGames[d]));
-    }
-  }
+  let filteredGames = gamesData.filter(g => {
+    const matchesCategory = currentCategory === 'all' || g.category === currentCategory;
+    const matchesSearch = !searchTerm || g.name.toLowerCase().includes(searchTerm);
+    return matchesCategory && matchesSearch;
+  });
 
-  const favoriteGames = gamesData.filter((g) => favoriteMap[g.id]);
-  favoriteGames.sort((a, b) => a.index - b.index);
+  // Separate favorites
+  const favoriteGames = filteredGames.filter(g => favoriteMap[g.id]);
+  const otherGames = filteredGames.filter(g => !favoriteMap[g.id]);
+
   if (favoriteGames.length > 0) {
     fragment.appendChild(makeSectionTitle("Favorites"));
-    for (let f = 0; f < favoriteGames.length; f++) {
-      fragment.appendChild(makeTile(favoriteGames[f]));
+    favoriteGames.sort((a, b) => a.name.localeCompare(b.name));
+    for (const game of favoriteGames) {
+      fragment.appendChild(makeTile(game));
     }
   }
 
-  for (let s = 0; s < sectionOrder.length; s++) {
-    const sectionName = sectionOrder[s];
-    const sectionGames = gamesData.filter(
-      (g) => g.section === sectionName && !favoriteMap[g.id]
-    );
-    if (sectionGames.length === 0) continue;
-    fragment.appendChild(makeSectionTitle(sectionName));
-    for (let t = 0; t < sectionGames.length; t++) {
-      fragment.appendChild(makeTile(sectionGames[t]));
-    }
+  // Sort other games by name
+  otherGames.sort((a, b) => a.name.localeCompare(b.name));
+  for (const game of otherGames) {
+    fragment.appendChild(makeTile(game));
   }
 
   container.appendChild(fragment);
+
+  // Update total games display
+  const totalGamesEl = l("totalGames");
+  if (totalGamesEl) totalGamesEl.innerText = String(filteredGames.length);
 
   const tiles = container.getElementsByClassName("tile");
   for (let n = 0; n < tiles.length; n++) {

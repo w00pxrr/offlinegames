@@ -21,11 +21,10 @@ html, body {
     transition: .5s;
 }
 
-/*Override max width of body set in new.css*/
+/* Full screen layout */
 body {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 18px 56px;
+    margin: 0;
+    padding: 0;
     position: relative;
     overflow-x: hidden;
     font-family: "Avenir Next", "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", sans-serif;
@@ -662,4 +661,35 @@ html[data-reduced-motion="true"] #newWin:hover {
     color: var(--nc-lk-1);
     font-weight: 600;
     font-family: 'Courier New', monospace;
+}
+
+/* New styles for redesigned layout */
+.has-background-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.navbar.is-fixed-top {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 30;
+}
+
+.hero.is-large {
+    padding-top: 4rem; /* Account for fixed navbar */
+}
+
+#contain .column {
+    display: flex;
+}
+
+.tile.card {
+    margin: 0.5rem;
+    width: 100%;
+    max-width: 200px;
+}
+
+.footer {
+    background-color: var(--nc-bg-2);
+    margin-top: 2rem;
 }
