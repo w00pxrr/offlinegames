@@ -747,23 +747,30 @@ function renderGames() {
             return matchesCategory && matchesSearch;
         });
     }
-    // Separate favorites
-    const favoriteGames = filteredGames.filter(g => favoriteMap[g.id]);
-    const otherGames = filteredGames.filter(g => !favoriteMap[g.id]);
-    if (favoriteGames.length > 0 && currentCategory !== 'favorites') {
-        fragment.appendChild(makeSectionTitle("Favorites"));
-        favoriteGames.sort((a, b) => a.name.localeCompare(b.name));
-        for (const game of favoriteGames) {
+    if (currentCategory === 'favorites') {
+        // When in favorites category, show all filtered games without separation
+        const sortedGames = filteredGames.sort((a, b) => a.name.localeCompare(b.name));
+        for (const game of sortedGames) {
             fragment.appendChild(makeTile(game));
         }
     }
-    // Sort other games by name
-    otherGames.sort((a, b) => a.name.localeCompare(b.name));
-    for (const game of otherGames) {
-        fragment.appendChild(makeTile(game));
+    else {
+        // For other categories, separate favorites from others
+        const favoriteGames = filteredGames.filter(g => favoriteMap[g.id]);
+        const otherGames = filteredGames.filter(g => !favoriteMap[g.id]);
+        if (favoriteGames.length > 0) {
+            fragment.appendChild(makeSectionTitle("Favorites"));
+            favoriteGames.sort((a, b) => a.name.localeCompare(b.name));
+            for (const game of favoriteGames) {
+                fragment.appendChild(makeTile(game));
+            }
+        }
+        otherGames.sort((a, b) => a.name.localeCompare(b.name));
+        for (const game of otherGames) {
+            fragment.appendChild(makeTile(game));
+        }
     }
     container.appendChild(fragment);
-    // Update total games display
     const totalGamesEl = l("totalGames");
     if (totalGamesEl)
         totalGamesEl.innerText = String(filteredGames.length);
