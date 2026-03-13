@@ -81,7 +81,6 @@ function initPage(): void {
 }
 
 function applyReducedMotionPreference(): void {
-  const savedReducedMotion = getStoredJSON("gams", { key: "reducedMotion" });
   let reduced: boolean = true; // Permanently enabled reduced motion
   document.documentElement.setAttribute(
     "data-reduced-motion",
@@ -408,7 +407,7 @@ if (shadeElm) {
     const overlay = l("overlay");
     const mainGam = l("mainGam") as HTMLIFrameElement | null;
     const newWin = l("newWin") as HTMLAnchorElement | null;
-    if (overlay) overlay.style.display = "none";
+    if (overlay) (overlay as HTMLElement).style.display = "none";
     if (mainGam) mainGam.src = "";
     if (newWin) newWin.href = "";
   };
@@ -480,6 +479,7 @@ const gamsList: GamListItem[] = [
   { name: "Ai Creatures", href: "g/g/aicreatures/index.html" },
   { name: "Grey Box Testing", href: "g/g/greybox/index.html" },
   { name: "Drift Boss", href: "g/g/driftboss/driftboss.html" },
+  {name: "Chess", href:"g/chess.html"},
   {name: "Subway Surfers", href: "g/g/subwaysurf/subwaysurf.html"},
   { title: "Retro", type: "section" },
   { name: "Super Mario 64" },
@@ -711,6 +711,13 @@ function handleTileOpen(tile: HTMLElement): void {
   const name = dataName;
   const modeX = dataModex;
   const pic = new URL(dataPic, window.location.href).href;
+  
+  // Track game visit
+  const gameId = tile.getAttribute("data-game-id");
+  if (gameId) {
+    recordGameVisit(gameId, name);
+  }
+  
   let mode: LaunchMode =
     (getStoredJSON("gams", { key: "gamMode" }) as LaunchMode) || "embed";
   const gameShellQuery = new URLSearchParams({
@@ -787,6 +794,88 @@ BroadcastDisguise.onmessage = () => { applyDisguise(); };
     window.open(gameShellUrl);
     return;
   }
+}
+
+// Game visit tracking
+function recordGameVisit(gameId: string, gameName: string): void {
+  const visits = getGameVisits();
+  const now = Date.now();
+  
+  if (visits[gameId]) {
+    visits[gameId].count++;
+    visits[gameId].lastVisit = now;
+  } else {
+    visits[gameId] = {
+      count: 1,
+      lastVisit: now,
+      name: gameName
+    };
+  }
+  
+  // Keep only last 100 unique games to limit storage
+  const allEntries = Object.entries(visits);
+  if (allEntries.length > 100) {
+    // Sort by lastVisit descending and take top 100
+    allEntries.sort((a, b) => b[1].lastVisit - a[1].lastVisit);
+    const trimmed = Object.fromEntries(allEntries.slice(0, 100));
+    localStorage.setItem("gams_game_visits", JSON.stringify(trimmed));
+  } else {
+    localStorage.setItem("gams_game_visits", JSON.stringify(visits));
+  }
+}
+
+function getGameVisits(): Record<string, {count: number; lastVisit: number; name: string}> {
+  const raw = localStorage.getItem("gams_game_visits");
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+function getTopVisitedGames(limit: number = 4): GameData[] {
+  const visits = getGameVisits();
+  const entries = Object.entries(visits);
+  
+  if (entries.length === 0) {
+    // Fallback to latest games
+    return getLatestGames();
+  }
+  
+  // Sort by count (descending), then by lastVisit (descending) for tiebreakers
+  entries.sort((a, b) => {
+    if (b[1].count !== a[1].count) {
+      return b[1].count - a[1].count;
+    }
+    return b[1].lastVisit - a[1].lastVisit;
+  });
+  
+  // Get game data for top entries
+  const topGameIds = new Set(entries.slice(0, limit).map(e => e[0]));
+  const recommended: GameData[] = [];
+  
+  // Maintain order from entries
+  for (const [gameId] of entries) {
+    if (recommended.length >= limit) break;
+    const game = gamesData.find(g => g.id === gameId);
+    if (game) {
+      recommended.push(game);
+    }
+  }
+  
+  // If we don't have enough, fill with latest games
+  if (recommended.length < limit) {
+    const latest = getLatestGames();
+    for (const game of latest) {
+      if (recommended.length >= limit) break;
+      if (!topGameIds.has(game.id)) {
+        recommended.push(game);
+      }
+    }
+  }
+  
+  return recommended.slice(0, limit);
 }
 
 function getLatestGames(): GameData[] {

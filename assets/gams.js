@@ -44,7 +44,6 @@ function initPage() {
     bindCategoryButtons();
 }
 function applyReducedMotionPreference() {
-    const savedReducedMotion = getStoredJSON("gams", { key: "reducedMotion" });
     let reduced = true; // Permanently enabled reduced motion
     document.documentElement.setAttribute("data-reduced-motion", reduced ? "true" : "false");
 }
@@ -426,6 +425,7 @@ const gamsList = [
     { name: "Ai Creatures", href: "g/g/aicreatures/index.html" },
     { name: "Grey Box Testing", href: "g/g/greybox/index.html" },
     { name: "Drift Boss", href: "g/g/driftboss/driftboss.html" },
+    { name: "Chess", href: "g/chess.html" },
     { name: "Subway Surfers", href: "g/g/subwaysurf/subwaysurf.html" },
     { title: "Retro", type: "section" },
     { name: "Super Mario 64" },
@@ -647,6 +647,11 @@ function handleTileOpen(tile) {
     const name = dataName;
     const modeX = dataModex;
     const pic = new URL(dataPic, window.location.href).href;
+    // Track game visit
+    const gameId = tile.getAttribute("data-game-id");
+    if (gameId) {
+        recordGameVisit(gameId, name);
+    }
     let mode = getStoredJSON("gams", { key: "gamMode" }) || "embed";
     const gameShellQuery = new URLSearchParams({
         icon: pic,
@@ -721,6 +726,83 @@ BroadcastDisguise.onmessage = () => { applyDisguise(); };
         window.open(gameShellUrl);
         return;
     }
+}
+// Game visit tracking
+function recordGameVisit(gameId, gameName) {
+    const visits = getGameVisits();
+    const now = Date.now();
+    if (visits[gameId]) {
+        visits[gameId].count++;
+        visits[gameId].lastVisit = now;
+    }
+    else {
+        visits[gameId] = {
+            count: 1,
+            lastVisit: now,
+            name: gameName
+        };
+    }
+    // Keep only last 100 unique games to limit storage
+    const allEntries = Object.entries(visits);
+    if (allEntries.length > 100) {
+        // Sort by lastVisit descending and take top 100
+        allEntries.sort((a, b) => b[1].lastVisit - a[1].lastVisit);
+        const trimmed = Object.fromEntries(allEntries.slice(0, 100));
+        localStorage.setItem("gams_game_visits", JSON.stringify(trimmed));
+    }
+    else {
+        localStorage.setItem("gams_game_visits", JSON.stringify(visits));
+    }
+}
+function getGameVisits() {
+    const raw = localStorage.getItem("gams_game_visits");
+    if (!raw)
+        return {};
+    try {
+        return JSON.parse(raw);
+    }
+    catch {
+        return {};
+    }
+}
+function getTopVisitedGames(limit = 4) {
+    const visits = getGameVisits();
+    const entries = Object.entries(visits);
+    if (entries.length === 0) {
+        // Fallback to latest games
+        return getLatestGames();
+    }
+    // Sort by count (descending), then by lastVisit (descending) for tiebreakers
+    entries.sort((a, b) => {
+        if (b[1].count !== a[1].count) {
+            return b[1].count - a[1].count;
+        }
+        return b[1].lastVisit - a[1].lastVisit;
+    });
+    // Get game data for top entries
+    const topGameIds = new Set(entries.slice(0, limit).map(e => e[0]));
+    const recommended = [];
+    // Maintain order from entries
+    for (const [gameId] of entries) {
+        if (recommended.length >= limit)
+            break;
+        const game = gamesData.find(g => g.id === gameId);
+        if (game) {
+            recommended.push(game);
+        }
+    }
+    // If we don't have enough, fill with latest games
+    if (recommended.length < limit) {
+        const latest = getLatestGames();
+        for (const game of latest) {
+            if (recommended.length >= limit)
+                break;
+            if (!topGameIds.has(game.id)) {
+                recommended.push(game);
+            }
+        }
+    }
+    return recommended.slice(0, limit);
 }
 function getLatestGames() {
     const allowedSections = ["HTML5/unity Webgl", "Flash"];
