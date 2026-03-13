@@ -13,8 +13,8 @@
 }
 
 html, body {
- margin: 0px;
- padding: 0px;
+ margin: 0;
+ padding: 0;
  overflow: hidden;
  background-color: var(--bg);
  color: var(--tx);
@@ -147,20 +147,31 @@ fill: var(--fill-hover);
   border-right: 1px solid var(--fill);
 }
 
-.main {
-  flex: 1;
-  position: relative;
-}
+ .main {
+   flex: 1;
+   position: relative;
+ }
+
+ /* Fullscreen mode */
+ body.fullscreen-active .sidebar {
+   display: none !important;
+ }
+
+ body.fullscreen-active .container {
+   display: block !important;
+ }
+
+ body.fullscreen-active .main {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100vw;
+   height: 100vh;
+   z-index: 9999;
+ }
 </style>
 </head>
 <body>
-<!-- The Modal -->
-tml‎
-+2
--58
-Lines changed: 2 additions & 58 deletions
-Original file line number	Diff line number	Diff line change
-@@ -157,67 +157,11 @@
 <!-- The Modal -->
 <div id="myModal" class="modal">
   <div class="modal-content">
@@ -376,14 +387,46 @@ window.onclick = function(event) {
 function openFullscreen(elementId) {
   var element = document.getElementById(elementId);
   if (!element) {return;}
-  if (element.requestFullscreen) {
-    element.requestFullscreen();
-  } else if (element.webkitRequestFullscreen) {
-    element.webkitRequestFullscreen();
-  } else if (element.msRequestFullscreen) {
-    element.msRequestFullscreen();
+  
+  if (!document.fullscreenElement) {
+    // Enter fullscreen
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+    // Hide sidebar when entering fullscreen
+    document.body.classList.add('fullscreen-active');
+  } else {
+    // Exit fullscreen
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
   }
 }
+
+function updateFullscreenState() {
+  var isInFullscreen = !!document.fullscreenElement ||
+                       !!document.webkitFullscreenElement ||
+                       !!document.msFullscreenElement;
+  
+  if (isInFullscreen) {
+    document.body.classList.add('fullscreen-active');
+  } else {
+    document.body.classList.remove('fullscreen-active');
+  }
+}
+
+// Listen for fullscreen changes (ESC key, browser controls)
+document.addEventListener('fullscreenchange', updateFullscreenState);
+document.addEventListener('webkitfullscreenchange', updateFullscreenState);
+document.addEventListener('msfullscreenchange', updateFullscreenState);
 
 
 function setFavicon(href) {
@@ -544,10 +587,24 @@ applyDisguise();
 }
 
 const recommendedGames = [
+  // HTML5/Unity Webgl games
   {name: "Drive Mad", href: "g/g/drivemad/drivemad.html", img: "img/drivemad.jpeg"},
   {name: "2048", href: "g/2048.html", img: "img/2048.jpeg"},
   {name: "Slope", href: "g/slope.html", img: "img/slope.jpeg"},
-  {name: "Snake", href: "g/snake.html", img: "img/snake.jpeg"}
+  {name: "Snake", href: "g/snake.html", img: "img/snake.jpeg"},
+  {name: "Cookie Clicker", href: "g/g/cookie/index.html", img: "img/cookieclicker.jpeg"},
+  {name: "Cube Field", href: "g/g/cubefield/index.html", img: "img/cubefield.jpeg"},
+  {name: "Paper IO 2", href: "g/g/paperio2/paperio2.html", img: "img/paperio2.jpeg"},
+  {name: "Burrito Bison", href: "g/g/burritobison/burritobison.html", img: "img/burritobison.jpeg"},
+  {name: "Drift Boss", href: "g/g/driftboss/driftboss.html", img: "img/driftboss.jpeg"},
+  {name: "Subway Surfers", href: "g/g/subwaysurf/subwaysurf.html", img: "img/subwaysurf.jpeg"},
+  // Flash games
+  {name: "World's Hardest Game", href: "g/worldshardestgame.html", img: "img/worldshardestgame.jpeg"},
+  {name: "Bloons Tower Defense 5", href: "g/g/Ruffle/player.html?swf=../../flash/btd5.swf", img: "img/btd5.jpeg"},
+  {name: "Run 3", href: "g/g/Ruffle/player.html?swf=../../flash/run3.swf", img: "img/run3.jpeg"},
+  {name: "Fireboy and Watergirl 1", href: "g/g/Ruffle/player.html?swf=../../flash/fbwg1.swf", img: "img/fbwg1.jpeg"},
+  {name: "QWOP", href: "g/g/Ruffle/player.html?swf=../../flash/qwop.swf", img: "img/qwop.jpeg"},
+  {name: "Pacman", href: "g/g/Ruffle/player.html?swf=../../flash/pacman.swf", img: "img/pacman.jpeg"}
 ];
 
 function makeTile(game) {
@@ -571,8 +628,43 @@ function makeTile(game) {
   return tile;
 }
 
+// Get visit counts from localStorage
+function getGameVisits() {
+  const raw = localStorage.getItem("gams_game_visits");
+  if (!raw) return {};
+  try {
+    const visits = JSON.parse(raw);
+    const counts = {};
+    for (const [gameId, data] of Object.entries(visits)) {
+      if (typeof data === 'object' && data.count) {
+        counts[gameId] = data.count;
+      }
+    }
+    return counts;
+  } catch {
+    return {};
+  }
+}
+
+// Reorder recommended games based on visit frequency
+function getSortedRecommendedGames() {
+  const visits = getGameVisits();
+  if (Object.keys(visits).length === 0) {
+    return recommendedGames.slice(0, 6);
+  }
+  
+  // Sort by visit count (descending)
+  return [...recommendedGames].sort((a, b) => {
+    const aCount = visits[a.name.toLowerCase().replace(/\s/g, '')] || 0;
+    const bCount = visits[b.name.toLowerCase().replace(/\s/g, '')] || 0;
+    return bCount - aCount;
+  }).slice(0, 6);
+}
+
+// Render recommended games
 const rec = document.getElementById('recommended');
-recommendedGames.forEach(game => rec.appendChild(makeTile(game)));
+const sortedGames = getSortedRecommendedGames();
+sortedGames.forEach(game => rec.appendChild(makeTile(game)));
 </script>
 </body>
 </html>

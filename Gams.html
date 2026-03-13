@@ -11,9 +11,9 @@
   <link rel = "preload" href = "assets/gams.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="assets/gams.css"></noscript>
   <!-- Primary Meta Tags -->
-  <title>Gams</title>
-  <meta name="title" content="Gams">
-  <meta name="description" content="Gams is an awesome unblocked games website for schools with educational games and we have over 74 games!">
+  <title>LearningArcade</title>
+  <meta name="title" content="LearningArcade">
+  <meta name="description" content="LearningArcade is an awesome unblocked games website for schools with educational games and we have over 74 games!">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -58,7 +58,7 @@ display: block !important;
 <section class="hero is-large is-primary has-background-gradient">
   <div class="hero-body">
     <div class="container">
-      <h1 class="title is-1">Gams - Forked by w00pxrr</h1>
+      <h1 class="title is-1">LearningArcade</h1>
       <p class="subtitle is-3">Fun educational games for schools</p>
     </div>
   </div>
@@ -99,7 +99,6 @@ display: block !important;
                 <option value="raw">Raw</option>
               </select>
             </div>
-          </p>
         </div>
       </div>
     </div>
@@ -111,7 +110,7 @@ display: block !important;
   <div class="container">
     <div class="field">
       <div class="control">
-        <input class="input is-large" type="text" placeholder="Search games..." id="searchInput">
+        <label for="searchInput"></label><input class="input is-large" type="text" placeholder="Search games..." id="searchInput">
       </div>
     </div>
   </div>
@@ -130,6 +129,16 @@ display: block !important;
       <button class="button is-light category-btn" data-category="sports">Sports</button>
       <button class="button is-light category-btn" data-category="tools">Tools</button>
       <button class="button is-light category-btn" data-category="runner">Runner</button>
+    </div>
+  </div>
+</section>
+
+<!-- Recommended Section -->
+<section id="recommended-section" class="section" style="display: none;">
+  <div class="container">
+    <h2 class="title is-2">Recommended For You</h2>
+    <div class="columns is-multiline" id="recommended-container">
+      <!-- Recommended games will be loaded here -->
     </div>
   </div>
 </section>
