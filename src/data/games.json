@@ -41,6 +41,9 @@
   { "name": "Drift Boss", "href": "games/g/driftboss/driftboss.html" },
   { "name": "Chess", "href": "games/chess.html" },
   { "name": "Subway Surfers", "href": "games/g/subwaysurf/subwaysurf.html" },
+  {
+    "name":"Five Nights At Einsteins", "href": "games/g/fnae/fnae.html"
+  },
   { "title": "Retro", "type": "section" },
   { "name": "Super Mario 64" },
   { "name": "Celeste" },

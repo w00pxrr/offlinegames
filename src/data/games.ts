@@ -59,6 +59,28 @@ export function getCategory(name: string): string {
   )
     return "sports";
   if (
+    lower.includes("horror") ||
+    lower.includes("five nights") ||
+    lower.includes("five nights at") ||
+    lower.includes("fnae") ||
+    lower.includes("fnaf")
+  )
+    return "horror";
+  if (
+    lower.includes("racing") ||
+    lower.includes("race") ||
+    lower.includes("drift") ||
+    lower.includes("drift boss") ||
+    lower.includes("madalin") ||
+    lower.includes("drive") ||
+    lower.includes("kart") ||
+    lower.includes("rally") ||
+    lower.includes("speed") ||
+    lower.includes("track") ||
+    lower.includes("duck life")
+  )
+    return "racing";
+  if (
     lower.includes("puzzle") ||
     lower.includes("quiz") ||
     lower.includes("bloxorz") ||
@@ -113,6 +135,8 @@ export function getCategory(name: string): string {
     lower.includes("tunnel rush") ||
     lower.includes("drift boss") ||
     lower.includes("subway surfers") ||
+    lower.includes("tanuki sunset") ||
+    lower.includes("tanuki") ||
     lower.includes("endless") ||
     lower.includes("runner") ||
     lower.includes("dash") ||
@@ -125,11 +149,32 @@ export function getCategory(name: string): string {
   )
     return "runner";
   if (
+    lower.includes("simulation") ||
+    lower.includes("simulator") ||
+    lower.includes("sim") ||
+    lower.includes("tycoon") ||
+    lower.includes("management") ||
+    lower.includes("builder") ||
+    lower.includes("factory") ||
+    lower.includes("idle") ||
+    lower.includes("clicker") ||
+    lower.includes("ai creatures") ||
+    lower.includes("grey box") ||
+    lower.includes("greybox")
+  )
+    return "simulation";
+  if (
+    lower.includes("mario") ||
+    lower.includes("platformer") ||
+    lower.includes("platform") ||
+    lower.includes("side-scroller") ||
+    lower.includes("side scroller")
+  )
+    return "platformer";
+  if (
     lower.includes("mario") ||
     lower.includes("sonic") ||
     lower.includes("geometry dash") ||
-    lower.includes("drift") ||
-    lower.includes("drive") ||
     lower.includes("tunnel") ||
     lower.includes("madalin") ||
     lower.includes("stickman") ||
@@ -168,13 +213,9 @@ export function getCategory(name: string): string {
     lower.includes("hack and slash") ||
     lower.includes("brawler") ||
     lower.includes("fighting") ||
-    lower.includes("platformer") ||
-    lower.includes("platform") ||
     lower.includes("roguelike") ||
     lower.includes("roguelite") ||
-    lower.includes("survival") ||
     lower.includes("stealth") ||
-    lower.includes("horror") ||
     lower.includes("battle") ||
     lower.includes("arena") ||
     lower.includes("top-down") ||
@@ -202,7 +243,6 @@ export function getCategory(name: string): string {
     lower.includes("papas") ||
     lower.includes("just one boss") ||
     lower.includes("40x escape") ||
-    lower.includes("duck life") ||
     lower.includes("use boxmen") ||
     lower.includes("doom") ||
     lower.includes("johnny upgrade") ||
