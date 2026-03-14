@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <style>
+html, body, iframe {
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ padding: 0;
+}
+    </style>
+   <script>
+window.hideProgress = function() {
+ var prog = document.getElementById('prog');
+ prog && prog.remove();
+};
+
+window.addEventListener("load", function() {
+ var prog = document.createElement("h1");
+ prog.textContent = "Status: Loading...";
+ prog.id = "prog";
+ document.body.appendChild(prog);
+ var OGLOG = console.log;
+ console.log = function() {
+  if (!prog) {
+   console.log = OGLOG;
+   return OGLOG.apply(this, arguments);
+  }
+  var str = `Status: ${(Array.from(arguments)).toString()}`;
+  prog.textContent = str;
+  return OGLOG.apply(this, arguments);
+ }
+});
+
+function launchOffline(zipJSFile, finalDone) {
+ var startMain = function() {
+  console.log("Starting launchOffline");
+  loadScript(`${zipJSFile}.js`, function() {
+   setupFetch();
+   setupXMLHttpRequest();
+   
+   window[zipJSFile].then(function(zipBlobURL) {
+    fetch(zipBlobURL).then(function(resp) {
+     console.log("Fetched files");
+     resp.blob().then(function(blob) {
+      uploadFile(blob, "readAsArrayBuffer", function(e) {
+       console.log("Reading Files...");
+       readZipEntries(e.data).then(function(fileList) {
+        window.fileList = fileList;
+        finalDone();
+        console.log("Running Done!");
+        window.hideProgress();
+       });
+      });
+     });
+    });
+   });
+  });
+ }
+ 
+ var toLoad = [];
+ 
+ if (!window["zip"]) {
+  toLoad.push("zip.min.js");
+ }
+ if (!window["zip"]) {
+  toLoad.push("getMimeType.min.js");
+ }
+ 
+ if (toLoad.length >= 1) {
+  var loadAll = [];
+  toLoad.forEach(function(e) {
+   loadAll.push(new Promise(function(resolve) {
+    loadScript(e, resolve)
+   }));
+  });
+  Promise.all(loadAll).then(startMain);
+ } else {
+  startMain();
+ }
+}
+
+function runInOrder(arr) {
+ var r;
+ var prom = new Promise(function(res) {
+  r = res;
+ });
+ 
+ function loadScriptPromise(src) {
+  return new Promise(function(resolve) {
+   var script = document.createElement("script");
+   script.src = src;
+   document.body.appendChild(script);
+   script.onload = function() {
+    console.log("Loaded", src);
+    resolve();
+   };
+  });
+ }
+ 
+ var currentIndex = 0;
+ var loadNext = function() {
+  if (currentIndex > arr.length - 1) {
+   r();
+   return;
+  }
+  
+  loadScriptPromise(arr[currentIndex]).then(function() {
+   currentIndex += 1;
+   loadNext();
+  });
+ }
+ 
+ loadNext();
+ return prom;
+}
+
+function triggerLoadEvents() {
+ const domContentLoadedEvent = new Event('DOMContentLoaded');
+ document.dispatchEvent(domContentLoadedEvent);
+
+ const loadEvent = new Event('load');
+ window.dispatchEvent(loadEvent);
+    
+ const loadEvent2 = new Event('load');
+ document.body.dispatchEvent(loadEvent2);
+}
+
+function loadScript(src, callback) {
+ console.log(`Load script: "${src}"`);
+ var script = document.createElement("script");
+ script.src = src;
+ document.head.appendChild(script);
+ script.onload = function() {
+  callback();
+  console.log("Loaded", src);
+ };
+}
+
+function setupFetch() {
+ const originalFetch = window.fetch;
+ window.fetch = function() {
+  arguments[0] = changeURL(arguments[0]);
+  return originalFetch.apply(this, arguments);
+ };
+}
+
+function setupXMLHttpRequest() {
+ const originalOpen = XMLHttpRequest.prototype.open;
+ Object.defineProperty(XMLHttpRequest.prototype, "open", {
+  value: function() {
+   arguments[1] = changeURL(arguments[1]);
+   return originalOpen.apply(this, arguments);
+  }
+ });
+}
+
+function changeURL(url) {
+ if (window.fileList && window.fileList[url]) {
+  url = window.fileList[url];
+ }
+ return url;
+}
+
+function readFile(file, readAs) {
+ return new Promise(function(resolve) {
+  var reader = new FileReader();
+  reader.onload = function() {
+   resolve(this.result);
+  }
+  reader[readAs](file);
+ });
+}
+
+function readZipEntries(data) {
+ return new Promise(function(resolve) {
+  var reader = new zip.ZipReader(new zip.Uint8ArrayReader(new Uint8Array(data)));
+  reader.getEntries().then(function(entries) {
+   var readAll = [];
+   var fileNames = [];
+
+   entries.forEach(function(entry) {
+    if (!entry.directory) {
+     readAll.push(entry.getData(new zip.Uint8ArrayWriter()));
+     fileNames.push(entry.filename);
+    }
+   });
+
+   Promise.all(readAll).then(function(readFiles) {
+    var fileList = createFileList(readFiles, fileNames);
+    resolve(fileList);
+   });
+  });
+ });
+}
+
+function createFileList(readFiles, fileNames) {
+ var fileList = {};
+ readFiles.forEach(function(readFile, i) {
+  var fileName = fileNames[i];
+  var mime = getMimeType(fileName);
+  var blob = new Blob([readFile.buffer], {type: mime});
+  var blobURL = URL.createObjectURL(blob);
+  fileList[fileName] = blobURL;
+ });
+ return fileList;
+}
+
+function uploadFile(file, readAs, callback) {
+ readFile(file, readAs || "readAsDataURL").then(function(data) {
+  callback({
+   name: file.name,
+   data: data,
+   mime: file.type,
+   size: file.size
+  });
+ });
+}
+
+function makeFrame() {
+ var frame = document.createElement("iframe");
+ frame.setAttribute("frameborder","0");
+ frame.setAttribute("allowfullscreen","true");
+ document.body.appendChild(frame);
+ return {
+  frame: frame,
+  frameWindow: frame.contentWindow||frame.contentDocument.document||frame.contentDocument
+ };
+}
+
+launchOffline("slope2.zip", function() {
+ var madeFrame = makeFrame();
+ var frame = madeFrame.frame;
+ var frameWindow = madeFrame.frameWindow;
+ frameWindow.document.open();
+ frameWindow.document.write(atob(`PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuLXVzIj4KICA8aGVhZD4KICAgIDx0aXRsZT5TbG9wZSAyPC90aXRsZT4KICAgIDxsaW5rIHJlbD0iaWNvbiIgdHlwZT0iaW1hZ2UvcG5nIiBocmVmPSIvZmF2aWNvbi5pY28iIC8+CiAgICA8c2NyaXB0IHR5cGU9InRleHQvamF2YXNjcmlwdCIgc3JjPSIvanMvbWFpbi5qcyI+PC9zY3JpcHQ+CiAgICA8bWV0YSBjaGFyc2V0PSJ1dGYtOCIgLz4KICAgIDxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04IiAvPgogICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJzdHlsZS5jc3MiIC8+CiAgPC9oZWFkPgogIDxib2R5IHN0eWxlPSJ3aWR0aDogMTAwJTsgaGVpZ2h0OiAxMDAlOyBtYXJnaW46IDA7Ij4KICAgIDxkaXYgaWQ9InVuaXR5LWNvbnRhaW5lciIgc3R5bGU9IndpZHRoOiAxMDAlOyBoZWlnaHQ6IDEwMCU7IG1hcmdpbjogMDsiIGNsYXNzPSJ1bml0eS1kZXNrdG9wIj4KICAgICAgPGNhbnZhcyBpZD0idW5pdHktY2FudmFzIiBzdHlsZT0id2lkdGg6IDEwMCU7IGhlaWdodDogMTAwJTsgbWFyZ2luOiAwOyI+PC9jYW52YXM+CiAgICAgIDxkaXYgaWQ9InVuaXR5LWxvYWRpbmctYmFyIj4KICAgICAgICA8ZGl2IGlkPSJ1bml0eS1sb2dvIj48L2Rpdj4KICAgICAgICA8ZGl2IGlkPSJ1bml0eS1wcm9ncmVzcy1iYXItZW1wdHkiPgogICAgICAgICAgPGRpdiBpZD0idW5pdHktcHJvZ3Jlc3MtYmFyLWZ1bGwiPjwvZGl2PgogICAgICAgIDwvZGl2PgogICAgICA8L2Rpdj4KICAgICAgPGRpdiBpZD0idW5pdHktbW9iaWxlLXdhcm5pbmciPgogICAgICAgIFdlYkdMIGJ1aWxkcyBhcmUgbm90IHN1cHBvcnRlZCBvbiBtb2JpbGUgZGV2aWNlcy4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxzY3JpcHQ+CiAgICAgIHZhciBidWlsZFVybCA9ICJCdWlsZCI7CiAgICAgIHZhciBsb2FkZXJVcmwgPSAiV2ViR0wyUGxheWVycyB2MS4xLmxvYWRlci5qcyI7CiAgICAgIHZhciBjb25maWcgPSB7CiAgICAgICAgZGF0YVVybDogIldlYkdMMlBsYXllcnMgdjEuMS5kYXRhLnVuaXR5d2ViIiwKICAgICAgICBmcmFtZXdvcmtVcmw6ICJXZWJHTDJQbGF5ZXJzIHYxLjEuZnJhbWV3b3JrLmpzLnVuaXR5d2ViIiwKICAgICAgICBjb2RlVXJsOiAiV2ViR0wyUGxheWVycyB2MS4xLndhc20udW5pdHl3ZWIiLAogICAgICAgIHN0cmVhbWluZ0Fzc2V0c1VybDogIlN0cmVhbWluZ0Fzc2V0cyIsCiAgICAgICAgY29tcGFueU5hbWU6ICJEZWZhdWx0Q29tcGFueSIsCiAgICAgICAgcHJvZHVjdE5hbWU6ICJTbG9wZSAyIFBsYXllciIsCiAgICAgICAgcHJvZHVjdFZlcnNpb246ICIxIiwKICAgICAgfTsKCiAgICAgIHZhciBjb250YWluZXIgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIjdW5pdHktY29udGFpbmVyIik7CiAgICAgIHZhciBjYW52YXMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIjdW5pdHktY2FudmFzIik7CiAgICAgIHZhciBsb2FkaW5nQmFyID0gZG9jdW1lbnQucXVlcnlTZWxlY3RvcigiI3VuaXR5LWxvYWRpbmctYmFyIik7CiAgICAgIHZhciBwcm9ncmVzc0JhckZ1bGwgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIjdW5pdHktcHJvZ3Jlc3MtYmFyLWZ1bGwiKTsKICAgICAgdmFyIGZ1bGxzY3JlZW5CdXR0b24gPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIjdW5pdHktZnVsbHNjcmVlbi1idXR0b24iKTsKICAgICAgdmFyIG1vYmlsZVdhcm5pbmcgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKCIjdW5pdHktbW9iaWxlLXdhcm5pbmciKTsKCiAgICAgIGlmICgvaVBob25lfGlQYWR8aVBvZHxBbmRyb2lkL2kudGVzdChuYXZpZ2F0b3IudXNlckFnZW50KSkgewogICAgICAgIGNvbnRhaW5lci5jbGFzc05hbWUgPSAidW5pdHktbW9iaWxlIjsKICAgICAgICAvLyBBdm9pZCBkcmFpbmluZyBmaWxscmF0ZSBwZXJmb3JtYW5jZSBvbiBtb2JpbGUgZGV2aWNlcywKICAgICAgICAvLyBhbmQgZGVmYXVsdC9vdmVycmlkZSBsb3cgRFBJIG1vZGUgb24gbW9iaWxlIGJyb3dzZXJzLgogICAgICAgIGNvbmZpZy5kZXZpY2VQaXhlbFJhdGlvID0gMTsKICAgICAgICBtb2JpbGVXYXJuaW5nLnN0eWxlLmRpc3BsYXkgPSAiYmxvY2siOwogICAgICAgIHNldFRpbWVvdXQoKCkgPT4gewogICAgICAgICAgbW9iaWxlV2FybmluZy5zdHlsZS5kaXNwbGF5ID0gIm5vbmUiOwogICAgICAgIH0sIDUwMDApOwogICAgICB9CiAgICAgIGxvYWRpbmdCYXIuc3R5bGUuZGlzcGxheSA9ICJibG9jayI7CgogICAgICB2YXIgc2NyaXB0ID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgic2NyaXB0Iik7CiAgICAgIHNjcmlwdC5zcmMgPSBsb2FkZXJVcmw7CiAgICAgIHNjcmlwdC5vbmxvYWQgPSAoKSA9PiB7CiAgICAgICAgY3JlYXRlVW5pdHlJbnN0YW5jZShjYW52YXMsIGNvbmZpZywgKHByb2dyZXNzKSA9PiB7CiAgICAgICAgICBwcm9ncmVzc0JhckZ1bGwuc3R5bGUud2lkdGggPSAxMDAgKiBwcm9ncmVzcyArICIlIjsKICAgICAgICB9KQogICAgICAgICAgLnRoZW4oKHVuaXR5SW5zdGFuY2UpID0+IHsKICAgICAgICAgICAgbG9hZGluZ0Jhci5zdHlsZS5kaXNwbGF5ID0gIm5vbmUiOwogICAgICAgICAgICBmdWxsc2NyZWVuQnV0dG9uLm9uY2xpY2sgPSAoKSA9PiB7CiAgICAgICAgICAgICAgdW5pdHlJbnN0YW5jZS5TZXRGdWxsc2NyZWVuKDEpOwogICAgICAgICAgICB9OwogICAgICAgICAgfSkKICAgICAgICAgIC5jYXRjaCgobWVzc2FnZSkgPT4gewogICAgICAgICAgICBjb25zb2xlLmxvZyhtZXNzYWdlKTsKICAgICAgICAgIH0pOwogICAgICB9OwogICAgICBkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKHNjcmlwdCk7CiAgICA8L3NjcmlwdD4KICAgIDxzY3JpcHQgZGVmZXIgc3JjPSJzZy5taW4uanMiPjwvc2NyaXB0PgogIDwvYm9keT4KPC9odG1sPg==`));
+ 
+ const OGchangeURL = changeURL;
+ window.changeURL = function(url) {
+  console.log(url);
+  var noSearch = url.split("?")[0];
+  var noThisFolder = url.split("./")[1];
+  if (!window.fileList[url] && window.fileList[noSearch]) {
+   url = noSearch;
+  }
+  if (!window.fileList[url] && window.fileList[noThisFolder]) {
+   url = noThisFolder;
+  }
+  return OGchangeURL(url);
+ }
+ 
+ const originalOpen = frameWindow.XMLHttpRequest.prototype.open;
+ Object.defineProperty(frameWindow.XMLHttpRequest.prototype, "open", {
+  value: function() {
+   arguments[1] = changeURL(arguments[1]);
+   return originalOpen.apply(this, arguments);
+  }
+ });
+ 
+ frameWindow.document.close();
+ frameWindow.fetch = window.fetch;
+ frameWindow.fetch = window.fetch;
+});
+    </script>
+  </head>
+</html>
