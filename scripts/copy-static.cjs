@@ -5,7 +5,7 @@ const path = require("path");
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 
-const toCopy = ["games", "img", "assets"];
+const toCopy = ["public/games", "public/img", "public/assets"];
 
 if (!fs.existsSync(dist)) {
   console.error("dist folder not found. Run Vite build first.");
@@ -14,7 +14,7 @@ if (!fs.existsSync(dist)) {
 
 for (const dir of toCopy) {
   const src = path.join(root, dir);
-  const dest = path.join(dist, dir);
+  const dest = path.join(dist, dir.replace(/^public[\\/]/, ""));
   if (!fs.existsSync(src)) continue;
   fs.cpSync(src, dest, { recursive: true });
 }

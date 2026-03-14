@@ -8,8 +8,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: "index.html",
-        settings: "Settings.html",
-        about: "games/about.html",
         gameEmbed: "games/g/gameEmbed.html",
       },
     },
