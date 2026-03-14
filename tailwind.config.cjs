@@ -2,9 +2,6 @@
 module.exports = {
   content: [
     "./index.html",
-    "./Settings.html",
-    "./games/about.html",
-    "./games/g/gameEmbed.html",
     "./src/**/*.{ts,tsx}",
   ],
   theme: {

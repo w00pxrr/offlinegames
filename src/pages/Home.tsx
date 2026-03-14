@@ -188,8 +188,9 @@ export default function HomePage({ isDark, onToggleTheme }: HomeProps) {
       name: game.name,
       src: href,
     }).toString();
-    const gameShellUrl = new URL("games/g/gameEmbed.html", window.location.href);
-    gameShellUrl.search = gameShellQuery;
+    const gameShellUrl = new URL(window.location.href);
+    gameShellUrl.search = "";
+    gameShellUrl.hash = `/game-embed?${gameShellQuery}`;
 
     let mode = gamMode;
     if (game.type === "raw") mode = "raw";

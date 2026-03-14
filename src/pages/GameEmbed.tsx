@@ -68,7 +68,12 @@ function getSortedRecommendedGames(): RecommendedGame[] {
 }
 
 export default function GameEmbedPage() {
-  const params = useMemo(() => new URLSearchParams(window.location.search), []);
+  const params = useMemo(() => {
+    const hash = window.location.hash;
+    const queryIndex = hash.indexOf("?");
+    if (queryIndex === -1) return new URLSearchParams(window.location.search);
+    return new URLSearchParams(hash.slice(queryIndex + 1));
+  }, []);
   const initialName = params.get("name") || "Gam";
   const initialIcon = resolveUrl(params.get("icon")) || "/img/gams-g.png";
   const initialSrc = resolveUrl(params.get("src"));

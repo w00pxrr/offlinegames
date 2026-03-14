@@ -25,13 +25,13 @@ export function Layout({
     <div className="min-h-screen px-4 pb-16 pt-6 text-textSecondary">
       <nav className="glass-panel mb-6 flex flex-wrap items-center justify-between gap-4 px-5 py-4">
         <div className="flex items-center gap-4">
-          <a className="nav-link" href="index.html">
+          <a className="nav-link" href="#/">
             Home
           </a>
-          <a className="nav-link" href="Settings.html">
+          <a className="nav-link" href="#/settings">
             Settings
           </a>
-          <a className="nav-link" href="games/about.html">
+          <a className="nav-link" href="#/about">
             About
           </a>
         </div>
