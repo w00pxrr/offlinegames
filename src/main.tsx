@@ -3,6 +3,15 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
+function applyPerformanceMode() {
+  const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : undefined;
+  if (typeof cores === "number" && cores > 0 && cores < 4) {
+    document.documentElement.setAttribute("data-fancy", "off");
+  }
+}
+
+applyPerformanceMode();
+
 function inferPage(): string {
   const hash = window.location.hash.toLowerCase();
   if (hash.startsWith("#/settings")) return "settings";

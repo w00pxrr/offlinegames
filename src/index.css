@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "facon";
-  src: url("/assets/facon.ttf") format("truetype");
+  src: url("./assets/facon.ttf") format("truetype");
   font-display: swap;
 }
 
@@ -95,6 +95,17 @@ html[data-reduced-motion="true"] body::after {
   animation: none !important;
 }
 
+html[data-fancy="off"] body {
+  background-image: none;
+  background-color: var(--gams-bg);
+  background-attachment: scroll;
+}
+
+html[data-fancy="off"] body::before,
+html[data-fancy="off"] body::after {
+  display: none;
+}
+
 @keyframes drift {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
@@ -169,25 +180,41 @@ html[data-reduced-motion="true"] body::after {
     left: calc(100% - 422px);
   }
 
-  .mobile-dpad {
-    @apply fixed bottom-4 right-4 z-40 hidden grid-cols-3 grid-rows-3 gap-2;
+  .mobile-controls {
+    @apply fixed bottom-4 left-4 right-4 z-40 hidden items-end justify-between gap-4;
+    padding-bottom: env(safe-area-inset-bottom);
     touch-action: none;
     user-select: none;
+  }
+
+  .mobile-dpad {
+    @apply grid grid-cols-3 grid-rows-3 gap-2;
   }
 
   .arrow-btn {
     @apply inline-flex h-12 w-12 items-center justify-center rounded-xl border border-panelBorder bg-[var(--gams-bg)] text-lg font-semibold text-textPrimary;
   }
 
-  .arrow-btn:active {
+  .space-btn {
+    @apply inline-flex h-12 min-w-[140px] items-center justify-center rounded-xl border border-panelBorder bg-[var(--gams-bg)] px-4 text-sm font-semibold uppercase tracking-[0.2em] text-textPrimary;
+  }
+
+  .arrow-btn:active,
+  .space-btn:active {
     transform: scale(0.96);
   }
 
   @media (hover: none) and (pointer: coarse), (max-width: 900px) {
-    .mobile-dpad {
-      display: grid;
+    .mobile-controls {
+      display: flex;
     }
   }
+}
+
+html[data-fancy="off"] .glass-panel {
+  box-shadow: none;
+  backdrop-filter: none;
+  background: var(--gams-bg-2);
 }
 
 @layer utilities {

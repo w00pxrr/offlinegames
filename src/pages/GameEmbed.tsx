@@ -157,18 +157,34 @@ export default function GameEmbedPage() {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const sendArrowKey = useCallback((eventType: "keydown" | "keyup", keyValue: string) => {
+  const sendVirtualKey = useCallback((eventType: "keydown" | "keyup", keyValue: string) => {
     const frame = document.getElementById("frame") as HTMLIFrameElement | null;
     if (!frame) return;
+
+    const keyCodeMap: Record<string, number> = {
+      ArrowUp: 38,
+      ArrowDown: 40,
+      ArrowLeft: 37,
+      ArrowRight: 39,
+      " ": 32,
+    };
+    const codeMap: Record<string, string> = {
+      ArrowUp: "ArrowUp",
+      ArrowDown: "ArrowDown",
+      ArrowLeft: "ArrowLeft",
+      ArrowRight: "ArrowRight",
+      " ": "Space",
+    };
+    const keyCode = keyCodeMap[keyValue] ?? 0;
+    const code = codeMap[keyValue] ?? keyValue;
 
     const dispatchArrowEvent = (target: EventTarget | null) => {
       if (!target || typeof (target as Window).dispatchEvent !== "function") return;
       const event = new KeyboardEvent(eventType, {
         key: keyValue,
-        code: keyValue,
-        which: keyValue === "ArrowUp" ? 38 : keyValue === "ArrowDown" ? 40 : keyValue === "ArrowLeft" ? 37 : 39,
-        keyCode:
-          keyValue === "ArrowUp" ? 38 : keyValue === "ArrowDown" ? 40 : keyValue === "ArrowLeft" ? 37 : 39,
+        code,
+        which: keyCode,
+        keyCode,
         bubbles: true,
         cancelable: true,
       });
@@ -286,37 +302,54 @@ export default function GameEmbedPage() {
         </div>
       </div>
 
-      <div
-        className="mobile-dpad"
-        aria-label="Mobile arrow controls"
-      >
-        {[
-          ["ArrowUp", "▲"],
-          ["ArrowLeft", "◀"],
-          ["ArrowDown", "▼"],
-          ["ArrowRight", "▶"],
-        ].map(([keyValue, label]) => (
-          <button
-            key={keyValue}
-            type="button"
-            className="arrow-btn"
-            data-key={keyValue}
-            onPointerDown={(event) => {
-              event.preventDefault();
-              sendArrowKey("keydown", keyValue);
-            }}
-            onPointerUp={(event) => {
-              event.preventDefault();
-              sendArrowKey("keyup", keyValue);
-            }}
-            onPointerLeave={(event) => {
-              event.preventDefault();
-              sendArrowKey("keyup", keyValue);
-            }}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="mobile-controls" aria-label="Mobile game controls">
+        <div className="mobile-dpad" aria-label="Mobile arrow controls">
+          {[
+            ["ArrowUp", "▲"],
+            ["ArrowLeft", "◀"],
+            ["ArrowDown", "▼"],
+            ["ArrowRight", "▶"],
+          ].map(([keyValue, label]) => (
+            <button
+              key={keyValue}
+              type="button"
+              className="arrow-btn"
+              data-key={keyValue}
+              onPointerDown={(event) => {
+                event.preventDefault();
+                sendVirtualKey("keydown", keyValue);
+              }}
+              onPointerUp={(event) => {
+                event.preventDefault();
+                sendVirtualKey("keyup", keyValue);
+              }}
+              onPointerLeave={(event) => {
+                event.preventDefault();
+                sendVirtualKey("keyup", keyValue);
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="space-btn"
+          onPointerDown={(event) => {
+            event.preventDefault();
+            sendVirtualKey("keydown", " ");
+          }}
+          onPointerUp={(event) => {
+            event.preventDefault();
+            sendVirtualKey("keyup", " ");
+          }}
+          onPointerLeave={(event) => {
+            event.preventDefault();
+            sendVirtualKey("keyup", " ");
+          }}
+        >
+          Space
+        </button>
       </div>
 
       {isModalOpen ? (

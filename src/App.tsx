@@ -1,10 +1,9 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { useTheme } from "./hooks/useTheme";
-
-const HomePage = React.lazy(() => import("./pages/Home"));
-const SettingsPage = React.lazy(() => import("./pages/Settings"));
-const AboutPage = React.lazy(() => import("./pages/About"));
-const GameEmbedPage = React.lazy(() => import("./pages/GameEmbed"));
+import HomePage from "./pages/Home";
+import SettingsPage from "./pages/Settings";
+import AboutPage from "./pages/About";
+import GameEmbedPage from "./pages/GameEmbed";
 
 type AppProps = {
   page: string;
@@ -24,5 +23,5 @@ export default function App({ page }: AppProps) {
     content = <HomePage isDark={theme === "dark"} onToggleTheme={toggleTheme} />;
   }
 
-  return <Suspense fallback={null}>{content}</Suspense>;
+  return <>{content}</>;
 }
