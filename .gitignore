@@ -1,6 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/react,macos,webstorm
 # Edit at https://www.toptal.com/developers/gitignore?templates=react,macos,webstorm
-
+node_modules/
+dist/
 ### macOS ###
 # General
 .DS_Store
